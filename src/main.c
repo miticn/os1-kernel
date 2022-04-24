@@ -1,13 +1,8 @@
 #include "../lib/console.h"
+#include "mem.h"
+#include "../lib/hw.h"
 
 void main(){
-    __putc('O');
-    __putc('S');
-    __putc('\n');
-    __putc('\n');
-
-    while(1){
-        char car = __getc();
-        __putc(car +30);
-    }
+    __mem_alloc(4);
+    if(HEAP_START_ADDR > HEAP_END_ADDR) __putc('k');
 }

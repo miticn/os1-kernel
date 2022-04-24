@@ -1,0 +1,229 @@
+GAS LISTING /tmp/ccs00qLz.s 			page 1
+
+
+   1              		.file	"mem.c"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.cfi_sections	.debug_frame
+   7              		.align	2
+   8              		.globl	__mem_alloc
+  10              	__mem_alloc:
+  11              	.LFB0:
+  12              		.file 1 "lib/mem.c"
+   1:lib/mem.c     **** #include "mem.h"
+   2:lib/mem.c     **** #include "hw.h"
+   3:lib/mem.c     **** 
+   4:lib/mem.c     **** static _frmem first = {0, 0};
+   5:lib/mem.c     **** 
+   6:lib/mem.c     **** void* __mem_alloc(size_t size){
+  13              		.loc 1 6 31
+  14              		.cfi_startproc
+  15              	.LVL0:
+  16 0000 130101FF 		addi	sp,sp,-16
+  17              		.cfi_def_cfa_offset 16
+  18 0004 23348100 		sd	s0,8(sp)
+  19              		.cfi_offset 8, -8
+  20 0008 13040101 		addi	s0,sp,16
+  21              		.cfi_def_cfa 8, 0
+   7:lib/mem.c     ****     if(first.next == 0) first.current_size = HEAP_END_ADDR - HEAP_START_ADDR;
+  22              		.loc 1 7 5
+  23              		.loc 1 7 13 is_stmt 0
+  24 000c 97070000 		ld	a5,.LANCHOR0
+  24      83B70700 
+  25              		.loc 1 7 7
+  26 0014 638A0700 		beqz	a5,.L4
+  27              	.L2:
+   8:lib/mem.c     ****     //Calculate size to alloc
+   9:lib/mem.c     ****     size_t size_to_alloc;
+  28              		.loc 1 9 5 is_stmt 1
+  10:lib/mem.c     ****     if (size % MEM_BLOCK_SIZE == 0) size_to_alloc = size;
+  29              		.loc 1 10 5
+  11:lib/mem.c     ****     else size_to_alloc = (size / MEM_BLOCK_SIZE + 1)* MEM_BLOCK_SIZE;
+  12:lib/mem.c     **** 
+  13:lib/mem.c     ****     size_to_alloc = size_to_alloc;
+  30              		.loc 1 13 5
+  14:lib/mem.c     **** 
+  15:lib/mem.c     ****     //if (first.)
+  16:lib/mem.c     **** 
+  17:lib/mem.c     ****     return 0;
+  31              		.loc 1 17 5
+  18:lib/mem.c     **** }
+  32              		.loc 1 18 1 is_stmt 0
+  33 0018 13050000 		li	a0,0
+  34              	.LVL1:
+  35 001c 03348100 		ld	s0,8(sp)
+  36              		.cfi_remember_state
+  37              		.cfi_restore 8
+  38              		.cfi_def_cfa 2, 16
+  39 0020 13010101 		addi	sp,sp,16
+GAS LISTING /tmp/ccs00qLz.s 			page 2
+
+
+  40              		.cfi_def_cfa_offset 0
+  41 0024 67800000 		jr	ra
+  42              	.LVL2:
+  43              	.L4:
+  44              		.cfi_restore_state
+   7:lib/mem.c     ****     //Calculate size to alloc
+  45              		.loc 1 7 25 is_stmt 1 discriminator 1
+   7:lib/mem.c     ****     //Calculate size to alloc
+  46              		.loc 1 7 60 is_stmt 0 discriminator 1
+  47 0028 97070000 		ld	a5,HEAP_END_ADDR
+  47      83B70700 
+  48 0030 17070000 		ld	a4,HEAP_START_ADDR
+  48      03370700 
+  49 0038 B387E740 		sub	a5,a5,a4
+   7:lib/mem.c     ****     //Calculate size to alloc
+  50              		.loc 1 7 44 discriminator 1
+  51 003c 17070000 		sd	a5,.LANCHOR0+8,a4
+  51      2330F700 
+  52 0044 6FF05FFD 		j	.L2
+  53              		.cfi_endproc
+  54              	.LFE0:
+  56              		.align	2
+  57              		.globl	__mem_free
+  59              	__mem_free:
+  60              	.LFB1:
+  19:lib/mem.c     **** 
+  20:lib/mem.c     **** int __mem_free(void* ptr){
+  61              		.loc 1 20 26 is_stmt 1
+  62              		.cfi_startproc
+  63              	.LVL3:
+  64 0048 130101FF 		addi	sp,sp,-16
+  65              		.cfi_def_cfa_offset 16
+  66 004c 23348100 		sd	s0,8(sp)
+  67              		.cfi_offset 8, -8
+  68 0050 13040101 		addi	s0,sp,16
+  69              		.cfi_def_cfa 8, 0
+  21:lib/mem.c     ****     return 0;
+  70              		.loc 1 21 5
+  22:lib/mem.c     **** }
+  71              		.loc 1 22 1 is_stmt 0
+  72 0054 13050000 		li	a0,0
+  73              	.LVL4:
+  74 0058 03348100 		ld	s0,8(sp)
+  75              		.cfi_restore 8
+  76              		.cfi_def_cfa 2, 16
+  77 005c 13010101 		addi	sp,sp,16
+  78              		.cfi_def_cfa_offset 0
+  79 0060 67800000 		jr	ra
+  80              		.cfi_endproc
+  81              	.LFE1:
+  83              		.bss
+  84              		.align	3
+  85              		.set	.LANCHOR0,. + 0
+  88              	first:
+  89 0000 00000000 		.zero	16
+  89      00000000 
+  89      00000000 
+GAS LISTING /tmp/ccs00qLz.s 			page 3
+
+
+  89      00000000 
+  90              		.text
+  91              	.Letext0:
+  92              		.file 2 "lib/hw.h"
+  93              		.file 3 "lib/mem.h"
+GAS LISTING /tmp/ccs00qLz.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 mem.c
+     /tmp/ccs00qLz.s:10     .text:0000000000000000 __mem_alloc
+     /tmp/ccs00qLz.s:14     .text:0000000000000000 .L0 
+     /tmp/ccs00qLz.s:16     .text:0000000000000000 .L0 
+     /tmp/ccs00qLz.s:17     .text:0000000000000004 .L0 
+     /tmp/ccs00qLz.s:19     .text:0000000000000008 .L0 
+     /tmp/ccs00qLz.s:21     .text:000000000000000c .L0 
+     /tmp/ccs00qLz.s:23     .text:000000000000000c .L0 
+     /tmp/ccs00qLz.s:24     .text:000000000000000c .L0 
+     /tmp/ccs00qLz.s:26     .text:0000000000000014 .L0 
+     /tmp/ccs00qLz.s:29     .text:0000000000000018 .L0 
+     /tmp/ccs00qLz.s:30     .text:0000000000000018 .L0 
+     /tmp/ccs00qLz.s:31     .text:0000000000000018 .L0 
+     /tmp/ccs00qLz.s:32     .text:0000000000000018 .L0 
+     /tmp/ccs00qLz.s:33     .text:0000000000000018 .L0 
+     /tmp/ccs00qLz.s:36     .text:0000000000000020 .L0 
+     /tmp/ccs00qLz.s:37     .text:0000000000000020 .L0 
+     /tmp/ccs00qLz.s:38     .text:0000000000000020 .L0 
+     /tmp/ccs00qLz.s:40     .text:0000000000000024 .L0 
+     /tmp/ccs00qLz.s:44     .text:0000000000000028 .L0 
+     /tmp/ccs00qLz.s:46     .text:0000000000000028 .L0 
+     /tmp/ccs00qLz.s:47     .text:0000000000000028 .L0 
+     /tmp/ccs00qLz.s:51     .text:000000000000003c .L0 
+     /tmp/ccs00qLz.s:53     .text:0000000000000048 .L0 
+     /tmp/ccs00qLz.s:59     .text:0000000000000048 __mem_free
+     /tmp/ccs00qLz.s:62     .text:0000000000000048 .L0 
+     /tmp/ccs00qLz.s:64     .text:0000000000000048 .L0 
+     /tmp/ccs00qLz.s:65     .text:000000000000004c .L0 
+     /tmp/ccs00qLz.s:67     .text:0000000000000050 .L0 
+     /tmp/ccs00qLz.s:69     .text:0000000000000054 .L0 
+     /tmp/ccs00qLz.s:71     .text:0000000000000054 .L0 
+     /tmp/ccs00qLz.s:72     .text:0000000000000054 .L0 
+     /tmp/ccs00qLz.s:75     .text:000000000000005c .L0 
+     /tmp/ccs00qLz.s:76     .text:000000000000005c .L0 
+     /tmp/ccs00qLz.s:78     .text:0000000000000060 .L0 
+     /tmp/ccs00qLz.s:80     .text:0000000000000064 .L0 
+     /tmp/ccs00qLz.s:85     .bss:0000000000000000 .LANCHOR0
+     /tmp/ccs00qLz.s:88     .bss:0000000000000000 first
+     /tmp/ccs00qLz.s:94     .text:0000000000000064 .L0 
+                     .debug_frame:0000000000000000 .L0 
+     /tmp/ccs00qLz.s:24     .text:000000000000000c .L0 
+     /tmp/ccs00qLz.s:47     .text:0000000000000028 .L0 
+     /tmp/ccs00qLz.s:48     .text:0000000000000030 .L0 
+     /tmp/ccs00qLz.s:51     .text:000000000000003c .L0 
+     /tmp/ccs00qLz.s:43     .text:0000000000000028 .L4
+     /tmp/ccs00qLz.s:27     .text:0000000000000018 .L2
+     /tmp/ccs00qLz.s:307    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccs00qLz.s:699    .debug_str:0000000000000161 .LASF22
+     /tmp/ccs00qLz.s:657    .debug_str:0000000000000024 .LASF23
+     /tmp/ccs00qLz.s:675    .debug_str:0000000000000095 .LASF24
+     /tmp/ccs00qLz.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccs00qLz.s:91     .text:0000000000000064 .Letext0
+     /tmp/ccs00qLz.s:649    .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccs00qLz.s:655    .debug_str:0000000000000017 .LASF0
+     /tmp/ccs00qLz.s:691    .debug_str:000000000000011f .LASF1
+     /tmp/ccs00qLz.s:681    .debug_str:00000000000000c4 .LASF2
+GAS LISTING /tmp/ccs00qLz.s 			page 5
+
+
+     /tmp/ccs00qLz.s:673    .debug_str:000000000000008e .LASF4
+     /tmp/ccs00qLz.s:667    .debug_str:0000000000000062 .LASF3
+     /tmp/ccs00qLz.s:663    .debug_str:000000000000004b .LASF5
+     /tmp/ccs00qLz.s:671    .debug_str:000000000000007b .LASF6
+     /tmp/ccs00qLz.s:689    .debug_str:000000000000010c .LASF7
+     /tmp/ccs00qLz.s:697    .debug_str:0000000000000151 .LASF8
+     /tmp/ccs00qLz.s:659    .debug_str:000000000000002e .LASF9
+     /tmp/ccs00qLz.s:661    .debug_str:000000000000003c .LASF10
+     /tmp/ccs00qLz.s:695    .debug_str:0000000000000142 .LASF11
+     /tmp/ccs00qLz.s:665    .debug_str:0000000000000052 .LASF12
+     /tmp/ccs00qLz.s:693    .debug_str:0000000000000132 .LASF13
+     /tmp/ccs00qLz.s:679    .debug_str:00000000000000b8 .LASF14
+     /tmp/ccs00qLz.s:687    .debug_str:00000000000000f6 .LASF15
+     /tmp/ccs00qLz.s:683    .debug_str:00000000000000d2 .LASF16
+     /tmp/ccs00qLz.s:669    .debug_str:0000000000000074 .LASF17
+     /tmp/ccs00qLz.s:705    .debug_str:0000000000000212 .LASF18
+     /tmp/ccs00qLz.s:701    .debug_str:00000000000001ff .LASF19
+     /tmp/ccs00qLz.s:703    .debug_str:000000000000020c .LASF20
+     /tmp/ccs00qLz.s:651    .debug_str:0000000000000000 .LASF25
+     /tmp/ccs00qLz.s:60     .text:0000000000000048 .LFB1
+     /tmp/ccs00qLz.s:81     .text:0000000000000064 .LFE1
+     /tmp/ccs00qLz.s:604    .debug_loc:0000000000000000 .LLST1
+     /tmp/ccs00qLz.s:653    .debug_str:000000000000000b .LASF26
+     /tmp/ccs00qLz.s:11     .text:0000000000000000 .LFB0
+     /tmp/ccs00qLz.s:54     .text:0000000000000048 .LFE0
+     /tmp/ccs00qLz.s:677    .debug_str:00000000000000b3 .LASF21
+     /tmp/ccs00qLz.s:618    .debug_loc:0000000000000039 .LLST0
+     /tmp/ccs00qLz.s:685    .debug_str:00000000000000e8 .LASF27
+     /tmp/ccs00qLz.s:63     .text:0000000000000048 .LVL3
+     /tmp/ccs00qLz.s:73     .text:0000000000000058 .LVL4
+     /tmp/ccs00qLz.s:15     .text:0000000000000000 .LVL0
+     /tmp/ccs00qLz.s:34     .text:000000000000001c .LVL1
+     /tmp/ccs00qLz.s:42     .text:0000000000000028 .LVL2
+     /tmp/ccs00qLz.s:95     .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+HEAP_END_ADDR
+HEAP_START_ADDR
