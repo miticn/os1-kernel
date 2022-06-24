@@ -1,8 +1,12 @@
 #include "../lib/console.h"
-#include "mem.h"
+#include "../h/mem.h"
 #include "../lib/hw.h"
+#include "../lib/console.h"
 
 void main(){
-    __mem_alloc(4);
-    if(HEAP_START_ADDR > HEAP_END_ADDR) __putc('k');
+    char* c = __mem_alloc(1);
+    *c = 'c';
+    __putc(*c);
+    __mem_free(c);
+
 }

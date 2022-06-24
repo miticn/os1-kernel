@@ -1,4 +1,4 @@
-#include "mem.h"
+#include "../h/mem.h"
 #include "../lib/hw.h"
 
 extern const void* HEAP_START_ADDR;
@@ -17,7 +17,7 @@ static int init = 0;
 void* __mem_alloc(size_t size){
     //for first alloc;
     if(init == 0){
-        first_free = HEAP_START_ADDR;
+        first_free = (void *)HEAP_START_ADDR;
         FreeHeader firstRunHeader = {((HEAP_END_ADDR - HEAP_START_ADDR)/MEM_BLOCK_SIZE)*MEM_BLOCK_SIZE, 0};
         *(FreeHeader*)HEAP_START_ADDR = firstRunHeader;
         init = 1;
@@ -31,8 +31,10 @@ void* __mem_alloc(size_t size){
     void *myBlock=0;
     FreeHeader*prev = 0;
     for(FreeHeader* i = first_free;i!=0;i=i->next){//first fit 4 now
-        if(i->freeMem > size_to_alloc)
+        if(i->freeMem > size_to_alloc) {
             myBlock = i;
+            break;
+        }
         prev = i;
     }
     if(myBlock==0) return 0;
@@ -51,7 +53,7 @@ void* __mem_alloc(size_t size){
     }
     else{//keep upper, allocate at bottom
         ((FreeHeader*)myBlock)->freeMem = newFreeMem;
-        allocated = ((FreeHeader*)myBlock)+ ((FreeHeader*)myBlock)->freeMem;
+        allocated = ((void*)myBlock)+ ((FreeHeader*)myBlock)->freeMem;
     }
     *((size_t*)allocated) = size_to_alloc;
     return allocated+sizeof(size_t);
@@ -81,18 +83,18 @@ int __mem_free(void* ptr){
     else{
         FreeHeader* prev;
         for(FreeHeader* i = first_free;i!=0;i=i->next){//add new element to list
-            if(i < ptr && (ptr < i->next || i->next == 0)){
+            if((void*)i < ptr && (ptr < (void*)i->next || i->next == 0)){
                 FreeHeader* tmp = i->next;
                 i->next = freeMemStart;
                 ((FreeHeader*)freeMemStart)->next = tmp;
                 prev = i;
 
                 //post add cleanup
-                if(i+i->freeMem == i->next){
+                if((void*)i+i->freeMem == i->next){
                     i->freeMem += i->next->freeMem;
                     i->next = i->next->next;
                 }
-                if(prev+prev->freeMem == i){
+                if((void*)prev+prev->freeMem == i){
                     prev->freeMem += i->freeMem;
                     prev->next = i->next;
                 }
