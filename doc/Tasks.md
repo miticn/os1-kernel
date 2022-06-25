@@ -1,6 +1,6 @@
-- [ ] 1. Alokator memorije (klasa MemoryAllocator).
-- [ ] 2. Prekidna rutina: samo prenos argumenata i prelazak u odgovarajući režim rada procesora, bez promene konteksta, bez ulaska dalje u jezgro, samo kao potprogram koji se iz korisničkog programa (bez niti) poziva kao „obi čan“ potprogram, samo preko instrukcije ecall, a ne radi više ništa već se odmah vraća nazad.
-- [ ] 3. Razgranati skok na implementaciju pojedinačnog sistemskog poziva u prekidnoj rutini. C funkcija koja implementira zajednički deo sistemskih poziva. Sistemski pozivi mem_alloc i mem_free: poziv iz prekidne rutine, ABI i C API. Testiranje iz „običnog“ C programa (bez niti) pozivom C API funkcije kao običnog potprograma.
+- [x] 1. Alokator memorije (klasa MemoryAllocator).
+- [x] 2. Prekidna rutina: samo prenos argumenata i prelazak u odgovarajući režim rada procesora, bez promene konteksta, bez ulaska dalje u jezgro, samo kao potprogram koji se iz korisničkog programa (bez niti) poziva kao „obi čan“ potprogram, samo preko instrukcije ecall, a ne radi više ništa već se odmah vraća nazad.
+- [x] 3. Razgranati skok na implementaciju pojedinačnog sistemskog poziva u prekidnoj rutini. C funkcija koja implementira zajednički deo sistemskih poziva. Sistemski pozivi mem_alloc i mem_free: poziv iz prekidne rutine, ABI i C API. Testiranje iz „običnog“ C programa (bez niti) pozivom C API funkcije kao običnog potprograma.
 - [ ] 4. Kostur jezgra: kostur klase Thread i klasa Scheduler u potpunosti.
 - [ ] 5. Sistemski stek (zajednički ili pojedinačan za nit). Kompletiranje prekidne rutine čuvanjem i restauracijom registara.Promena konteksta: u operaciji yield ili u prekidnoj rutini.29
 - [ ]  6. Formiranje početnog konteksta niti. Sistemski pozivi dispatch i thread_create (ABI i C API). Testiranje pomoću niti koje se nikada ne završavaju (program gasiti nasilno iz operativnog sistema domaćina).
