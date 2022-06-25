@@ -4,7 +4,7 @@
 #ifndef _syscall_cpp_h
 #define _syscall_cpp_h
 
-#include "mem.h"
+#include "syscall_c.h"
 
 void* operator new (size_t);
 void operator delete (void*);
