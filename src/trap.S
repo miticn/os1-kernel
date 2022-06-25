@@ -4,8 +4,8 @@
 supervisorTrap:
     addi sp,sp, -256
 
-    sd x0, 0(sp)
-    sd x1, 0x8(sp)
+    sd x0, 0x00(sp)
+    sd x1, 0x08(sp)
     sd x2, 0x10(sp)
     sd x3, 0x18(sp)
     sd x4, 0x20(sp)
@@ -50,7 +50,7 @@ supervisorTrap:
     ld x7, 0x38(sp)
     ld x8, 0x40(sp)
     ld x9, 0x48(sp)
-    ld x10, 0x50(sp)
+    #ld x10, 0x50(sp) return value removed
     ld x11, 0x58(sp)
     ld x12, 0x60(sp)
     ld x13, 0x68(sp)
