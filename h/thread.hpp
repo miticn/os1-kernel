@@ -1,9 +1,12 @@
+#pragma once
 #include "../lib/hw.h"
 class _thread;
 typedef _thread* thread_t;
 class _thread{
 public:
     static void yield();
+
+    static thread_t thread_create(void(*start_routine)(void*), void* arg, void* stack_space);
     class SchedulerNode{
     private:
         thread_t next;
@@ -12,15 +15,21 @@ public:
         void setNext(thread_t next){this->next = next;}
     };
     SchedulerNode myNode;
+
+    static thread_t running;
 private:
+    void (*body)();
+    void *stack;
+
     struct Context{//pc and sp in Thread, rest on stack
         uint64 pc;
         uint64 sp;
     };
-    void (*body)();
-    void *stack;
     Context myContext;
+
+    static void contextSwitch(Context *oldContext, Context *newContext);//yield u projektu?
+    static void dispatch();
 };
-int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg);
-int thread_exit ();
-void thread_dispatch ();
+int _thread_create(thread_t* handle, void(*start_routine)(void*), void* arg, void* stack_space);
+int _thread_exit ();
+void _thread_dispatch ();

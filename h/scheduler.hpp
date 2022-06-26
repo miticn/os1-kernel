@@ -1,9 +1,11 @@
+#pragma once
 #include "thread.hpp"
 class Scheduler{
 private:
-    thread_t first, last;
+    static thread_t first;
+    static thread_t last;
 
 public:
-    thread_t get();
-    void push(thread_t);
+    static thread_t get();
+    static void push(thread_t);
 };

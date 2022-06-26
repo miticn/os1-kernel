@@ -5,7 +5,7 @@
 #include "../h/syscall_c.h"
 #include "../h/handle_trap.h"
 
-
+#include "../h/example_functions.h"
 
 void main(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
@@ -21,6 +21,7 @@ void main(){
     mem_free(in);
     mem_free(lg);
     if(i==0){ __putc('i');}
+    printString("Zdravo ljudi!");
     while(1){}
 
 }
