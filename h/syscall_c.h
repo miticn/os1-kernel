@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 
-    void* mem_alloc(size_t size);
+    void* mem_alloc(size_t blocks);
     int mem_free(void* ptr);
 
 #ifdef __cplusplus

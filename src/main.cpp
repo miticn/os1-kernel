@@ -12,11 +12,14 @@ void main(){
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
 
     char* c = new char;
+    int* in = new int;
+    long* lg = new long;
     *c = 'c';
     __putc(*c);
     int i = mem_free(c);
 
-
+    mem_free(in);
+    mem_free(lg);
     if(i==0){ __putc('i');}
     while(1){}
 

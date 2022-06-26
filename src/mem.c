@@ -14,7 +14,7 @@ static void *first_free;
 static int init = 0;
 
 //Keep number of blocks allocated in first block
-void* __mem_alloc(size_t size){
+void* __mem_alloc(size_t blocks){
     //for first alloc;
     if(init == 0){
         first_free = (void *)HEAP_START_ADDR;
@@ -22,11 +22,11 @@ void* __mem_alloc(size_t size){
         *(FreeHeader*)HEAP_START_ADDR = firstRunHeader;
         init = 1;
     }
-    
+
     //Calculate size to alloc
     size_t size_to_alloc;
-    if ((size+sizeof(size_t)) % MEM_BLOCK_SIZE == 0) size_to_alloc = (size+sizeof(size_t))* MEM_BLOCK_SIZE;
-    else size_to_alloc = ((size+sizeof(size_t)) / MEM_BLOCK_SIZE + 1)* MEM_BLOCK_SIZE;
+
+    size_to_alloc = blocks * MEM_BLOCK_SIZE;
 
     void *myBlock=0;
     FreeHeader*prev = 0;
@@ -74,34 +74,33 @@ int __mem_free(void* ptr){
         ((FreeHeader*)freeMemStart)->next = first_free;
         first_free = ((FreeHeader*)freeMemStart);
 
-        if(first_free + ((FreeHeader*)first_free)->freeMem == ((FreeHeader*)first_free)->next){//post add cleanup
+        if(first_free + ((FreeHeader*)first_free)->freeMem == (void*)((FreeHeader*)first_free)->next){//post add cleanup
             ((FreeHeader*)first_free)->freeMem += ((FreeHeader*)first_free)->next->freeMem;
             ((FreeHeader*)first_free)->next = ((FreeHeader*)first_free)->next->next;
 
         }
     }
     else{
-        FreeHeader* prev;
-        for(FreeHeader* i = first_free;i!=0;i=i->next){//add new element to list
+        FreeHeader* i;
+        for(i = first_free;i!=0;i=i->next){//add new element to list
             if((void*)i < ptr && (ptr < (void*)i->next || i->next == 0)){
                 FreeHeader* tmp = i->next;
                 i->next = freeMemStart;
                 ((FreeHeader*)freeMemStart)->next = tmp;
-                prev = i;
-
-                //post add cleanup
-                if((void*)i+i->freeMem == i->next){
-                    i->freeMem += i->next->freeMem;
-                    i->next = i->next->next;
-                }
-                if((void*)prev+prev->freeMem == i){
-                    prev->freeMem += i->freeMem;
-                    prev->next = i->next;
-                }
-
                 break;
             }
         }
+        //post add cleanup
+        if(((void*)i->next)+(i->next)->freeMem == (void*)(i->next->next)){
+            (i->next)->freeMem += i->next->next->freeMem;
+            i->next->next = i->next->next->next;
+
+        }
+        if((void*)i+i->freeMem == (void*)i->next){
+            i->freeMem += i->next->freeMem;
+            i->next = i->next->next;
+        }
+
     }
     
 
