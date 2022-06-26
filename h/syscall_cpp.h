@@ -8,7 +8,7 @@
 
 void* operator new (size_t);
 void operator delete (void*);
-/*
+
 class Thread {
 public:
     Thread (void (*body)(void*), void* arg);
@@ -22,6 +22,7 @@ protected:
 private:
     thread_t myHandle;
 };
+/*
 class Semaphore {
 public:
     Semaphore (unsigned init = 1);
