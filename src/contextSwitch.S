@@ -5,9 +5,9 @@
 saveRegisters:
     addi sp,sp, -256
 
-    sd x0, 0x00(sp)
-    sd x1, 0x08(sp)
-    sd x2, 0x10(sp)
+    #sd x0, 0x00(sp)
+    #sd x1, 0x08(sp)
+    #sd x2, 0x10(sp)
     sd x3, 0x18(sp)
     sd x4, 0x20(sp)
     sd x5, 0x28(sp)
@@ -40,9 +40,9 @@ saveRegisters:
     ret
 
 retriveRegisters:
-     ld x0, 0x00(sp)
-     ld x1, 0x08(sp)
-     ld x2, 0x10(sp)
+     #ld x0, 0x00(sp)
+     #ld x1, 0x08(sp)
+     #ld x2, 0x10(sp)
      ld x3, 0x18(sp)
      ld x5, 0x28(sp)
      ld x4, 0x20(sp)
@@ -72,6 +72,8 @@ retriveRegisters:
      ld x29, 0xe8(sp)
      ld x30, 0xf0(sp)
      ld x31, 0xf8(sp)
+
+     addi sp, sp, 256
      ret
 
 _ZN7_thread13contextSwitchEPNS_7ContextES1_:

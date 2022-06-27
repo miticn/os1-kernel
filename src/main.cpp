@@ -5,8 +5,10 @@
 #include "../h/syscall_c.h"
 #include "../h/handle_trap.h"
 
-#include "../h/example_functions.h"
 
+#include "../h/example_functions.h"
+#include "../h/thread.hpp"
+#include "../h/scheduler.hpp"
 void main(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
@@ -22,6 +24,30 @@ void main(){
     mem_free(lg);
     if(i==0){ __putc('i');}
     printString("Zdravo ljudi!");
-    while(1){}
+
+    thread_t threads[4];
+    threads[0] = _thread::thread_create(nullptr,nullptr,nullptr);
+
+    void *stack[2];
+    stack[0] = (uint64*) mem_alloc(DEFAULT_STACK_SIZE);
+    stack[1] = (uint64*) mem_alloc(DEFAULT_STACK_SIZE);
+    stack[0] = &stack[0]+DEFAULT_STACK_SIZE;
+    stack[1] = &stack[1]+DEFAULT_STACK_SIZE;
+    threads[1] = _thread::thread_create(function1,nullptr,stack[0]);
+    threads[2] = _thread::thread_create(function2,nullptr,stack[1]);
+    _thread::running = threads[0];
+
+
+
+    while(1){
+        printString("Main\n");
+        thread_t test = Scheduler::firstGet();
+        if(test==nullptr) __putc('c');
+        _thread::yield();
+    }
+    delete threads[0];
+    delete threads[1];
+    delete threads[2];
+
 
 }

@@ -18,7 +18,9 @@ public:
 
     static thread_t running;
 private:
-    void (*body)();
+    _thread(void (*body)(void *), void* arg, void* stack_space);
+
+    void (*body)(void *);
     void *stack;
 
     struct Context{//pc and sp in Thread, rest on stack

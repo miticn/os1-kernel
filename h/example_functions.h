@@ -6,6 +6,7 @@
 #define PROJECT_BASE_EXAMPLE_FUNCTIONS_H
 
 #include "../lib/console.h"
+#include "../h/thread.hpp"
 
 void printString(char const *string){
     for(char const * chr = string; *chr!='\0';chr++){
@@ -13,15 +14,17 @@ void printString(char const *string){
     }
 }
 
-void function1(){
+void function1(void *param){
     while(1){
         printString("Function1 \n");
+        _thread::yield();
     }
 }
 
-void function2(){
+void function2(void *param){
     while(1){
         printString("Function2 \n");
+        _thread::yield();
     }
 }
 
