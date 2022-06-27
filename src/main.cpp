@@ -29,10 +29,10 @@ void main(){
     threads[0] = _thread::thread_create(nullptr,nullptr,nullptr);
 
     void *stack[2];
-    stack[0] = (uint64*) mem_alloc(DEFAULT_STACK_SIZE);
-    stack[1] = (uint64*) mem_alloc(DEFAULT_STACK_SIZE);
-    stack[0] = &stack[0]+DEFAULT_STACK_SIZE;
-    stack[1] = &stack[1]+DEFAULT_STACK_SIZE;
+    stack[0] = mem_alloc(DEFAULT_STACK_SIZE);
+    stack[1] = mem_alloc(DEFAULT_STACK_SIZE);
+    stack[0] = (char*)stack[0]+DEFAULT_STACK_SIZE;
+    stack[1] = (char*)stack[1]+DEFAULT_STACK_SIZE;
     threads[1] = _thread::thread_create(function1,nullptr,stack[0]);
     threads[2] = _thread::thread_create(function2,nullptr,stack[1]);
     _thread::running = threads[0];
