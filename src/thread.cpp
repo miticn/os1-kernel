@@ -11,8 +11,7 @@ extern "C" void saveRegisters();
 
 thread_t _thread::running=0;
 int _thread::thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space){
-    thread_t test = new _thread(start_routine,arg,stack_space);
-    *handle = test;
+    *handle = new _thread(start_routine,arg,stack_space);
     if(*handle== 0 ) return -9;
     return 0;
 }
