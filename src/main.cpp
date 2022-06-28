@@ -1,4 +1,3 @@
-#include "../lib/console.h"
 
 #include "../lib/hw.h"
 #include "../h/syscall_cpp.h"
@@ -21,13 +20,13 @@ void main(){
     int* in = new int;
     long* lg = new long;
     *c = 'c';
-    __putc(*c);
+    putc(*c);
     int i = mem_free(c);
 
     mem_free(in);
     mem_free(lg);
     */
-    //if(i==0){ __putc('i');}
+    //if(i==0){ putc('i');}
     printString("Zdravo ljudi!\n");
 
     thread_t threads[3];
@@ -44,7 +43,7 @@ void main(){
     while(1){
         printString("Main\n");
         thread_t test = Scheduler::firstGet();
-        if(test==nullptr) __putc('c');
+        if(test==nullptr) putc('c');
         _thread::yield();
     }
     delete threads[0];

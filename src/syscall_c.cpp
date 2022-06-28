@@ -4,12 +4,16 @@
 #include "../h/abi_codes.h"
 #include "../lib/hw.h"
 //always use ecall
+extern "C" void setParams(uint64 a0,uint64 a1,uint64 a2,uint64 a3,uint64 a4);
 
 void* mem_alloc(size_t size){
-    size_t blocks = getNumOfBlocks(size);
+    size_t blocks;
+    blocks = getNumOfBlocks(size);
 
-    __asm__ volatile ("mv a1, %[write] " : : [write] "r" (blocks));//set first parametar
-    __asm__ volatile ("mv a0, %[write] " : : [write] "r" (MEM_ALLOC_CODE));//set a0 to function code
+
+    setParams(MEM_ALLOC_CODE,blocks,0,0,0);
+    //__asm__ volatile ("mv a0, %[write] " : : [write] "r" (MEM_ALLOC_CODE));//set a0 to function code
+    //__asm__ volatile ("mv a1, %[write] " : : [write] "r" (blocks));//set first parametar
     __asm__ volatile("ecall");
     void *ptr;
     __asm__ volatile ("mv %[read], a0" : [read] "=r" (ptr));//get return value
@@ -62,4 +66,10 @@ int thread_exit (){
 
 void thread_dispatch (){
 
+}
+
+
+void putc(char c){
+    setParams(PUTC_CODE,c,0,0,0);
+    __asm__ volatile("ecall");
 }

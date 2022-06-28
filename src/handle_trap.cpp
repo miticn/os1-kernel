@@ -32,14 +32,14 @@ extern "C" void handleSupervisorTrap(){
         switch((uint64)syscall_code) {
             case MEM_ALLOC_CODE: {
                 size_t sz;
-                __asm__ volatile ("mv %[read], a1" : [read] "=r"(sz));//get first param
+                sz = a1;
                 void *ptr = __mem_alloc(sz);
                 __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ptr));//set return value
             }
                 break;
             case MEM_FREE_CODE: {
                 void *ptr;
-                __asm__ volatile ("mv %[read], a1" : [read] "=r"(ptr));//get first param
+                ptr = (void*)a1;//get first param
                 int ret = __mem_free(ptr);
                 __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set return value
             }
@@ -73,6 +73,7 @@ extern "C" void handleSupervisorTrap(){
             case GETC_CODE:
                 break;
             case PUTC_CODE:
+                __putc(a1);
                 break;
         }
         asm volatile("csrc sip, 0x02");

@@ -1,6 +1,7 @@
 .global saveRegisters
 .global retriveRegisters
 .global _ZN7_thread13contextSwitchEPNS_7ContextES1_
+.global setParams
 
 saveRegisters:
     addi sp,sp, -256
@@ -82,4 +83,7 @@ _ZN7_thread13contextSwitchEPNS_7ContextES1_:
 
     ld ra, 0x00(a1)
     ld sp, 0x08(a1)
+    ret
+
+setParams:
     ret

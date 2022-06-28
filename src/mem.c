@@ -13,18 +13,22 @@ typedef struct header{
 static void *first_free;
 static int init = 0;
 
+#define HEAP_END_ADDR_ALIGNED (void *)((size_t)HEAP_END_ADDR / MEM_BLOCK_SIZE * MEM_BLOCK_SIZE)
+#define HEAP_START_ADDR_ALIGNED (void *)(((size_t)HEAP_START_ADDR - 1 + MEM_BLOCK_SIZE) / MEM_BLOCK_SIZE * MEM_BLOCK_SIZE)
+
 size_t getNumOfBlocks(size_t size) {
-    if ((size + sizeof(size_t)) % MEM_BLOCK_SIZE == 0) return (size + sizeof(size_t));
-    else return ((size + sizeof(size_t)) / MEM_BLOCK_SIZE + 1);
+    return (size - 1 + MEM_BLOCK_SIZE) / MEM_BLOCK_SIZE;
 }
 
 //Keep number of blocks allocated in first block
 void* __mem_alloc(size_t blocks){
+    blocks++; //For header
+
     //for first alloc;
     if(init == 0){
-        first_free = (void *)HEAP_START_ADDR;
-        FreeHeader firstRunHeader = {((HEAP_END_ADDR - HEAP_START_ADDR)/MEM_BLOCK_SIZE)*MEM_BLOCK_SIZE, 0};
-        *(FreeHeader*)HEAP_START_ADDR = firstRunHeader;
+        first_free = (void *)HEAP_START_ADDR_ALIGNED;
+        FreeHeader firstRunHeader = {((HEAP_END_ADDR_ALIGNED - HEAP_START_ADDR_ALIGNED)/MEM_BLOCK_SIZE)*MEM_BLOCK_SIZE, 0};
+        *(FreeHeader*)HEAP_START_ADDR_ALIGNED = firstRunHeader;
         init = 1;
     }
 
@@ -61,15 +65,15 @@ void* __mem_alloc(size_t blocks){
         allocated = ((void*)myBlock)+ ((FreeHeader*)myBlock)->freeMem;
     }
     *((size_t*)allocated) = size_to_alloc;
-    return allocated+sizeof(size_t);
+    return allocated+MEM_BLOCK_SIZE;
 
 }
 
 int __mem_free(void* ptr){
-    void * freeMemStart = ptr - sizeof(size_t);
+    void * freeMemStart = ptr - MEM_BLOCK_SIZE;
     size_t memToFree = *(size_t*)freeMemStart;
     
-    if(freeMemStart <HEAP_START_ADDR || freeMemStart + memToFree > HEAP_END_ADDR) return -1;
+    if(freeMemStart <HEAP_START_ADDR_ALIGNED || freeMemStart + memToFree > HEAP_END_ADDR_ALIGNED) return -1;
 
     FreeHeader init = {memToFree, 0};
     *(FreeHeader*)freeMemStart = init;

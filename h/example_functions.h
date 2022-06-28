@@ -5,12 +5,12 @@
 #ifndef PROJECT_BASE_EXAMPLE_FUNCTIONS_H
 #define PROJECT_BASE_EXAMPLE_FUNCTIONS_H
 
-#include "../lib/console.h"
+#include "../h/syscall_c.h"
 #include "../h/thread.hpp"
 
 void printString(char const *string){
     for(char const * chr = string; *chr!='\0';chr++){
-        __putc(*chr);
+        putc(*chr);
     }
 }
 
