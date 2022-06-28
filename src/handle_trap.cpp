@@ -60,6 +60,8 @@ extern "C" void handleSupervisorTrap(){
                 int ret = _thread::thread_exit();
 
                 __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set ret value
+                asm volatile("csrc sip, 0x02");
+                _thread::exit();
             }
                 break;
             case THREAD_DISPATCH_CODE:

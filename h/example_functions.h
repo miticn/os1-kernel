@@ -17,6 +17,7 @@ void printString(char const *string){
 void function1(void *param){
     while(1){
         printString("Function1 \n");
+        thread_exit();
         _thread::yield();
     }
 }

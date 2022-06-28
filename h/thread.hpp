@@ -18,7 +18,15 @@ public:
     };
     SchedulerNode myNode;
 
+    struct Context{//pc and sp in Thread, rest on stack
+        uint64 pc;
+        uint64 sp;
+    };
+
     static thread_t running;
+
+    static void exit();
+    static void exit(Context *newContext);
 
     static void * operator new(size_t size);
     static void operator delete(void *p);
@@ -34,15 +42,11 @@ private:
     void (*body)(void *);
     void *stack;
 
-    struct Context{//pc and sp in Thread, rest on stack
-        uint64 pc;
-        uint64 sp;
-    };
+
     Context myContext;
 
     static void contextSwitch(Context *oldContext, Context *newContext);//yield u projektu?
     static void dispatch();
-    static void exit(Context *newContext);
 };
 int _thread_exit ();
 void _thread_dispatch ();

@@ -53,13 +53,16 @@ void *_thread::operator new(size_t size){
 }
 void _thread::operator delete(void *p){
     ((thread_t)p)->stack = ((char*)((thread_t)p)->stack)- DEFAULT_STACK_SIZE;
-    mem_free(((thread_t)p)->stack);
-    mem_free(p);
+    __mem_free(((thread_t)p)->stack);
+    __mem_free(p);
 }
 
 int _thread::thread_exit() {
-    delete running;
+    __mem_free(running);
     running = Scheduler::get();
-    _thread::exit(&running->myContext);
-    return -100;
+    return 0;
+}
+
+void _thread::exit() {
+    exit(&running->myContext);
 }
