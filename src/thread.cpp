@@ -58,7 +58,7 @@ void _thread::operator delete(void *p){
 }
 
 int _thread::thread_exit() {
-    __mem_free(running);
+    delete running;
     running = Scheduler::get();
     return 0;
 }
