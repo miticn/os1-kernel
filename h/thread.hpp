@@ -27,6 +27,7 @@ public:
     static uint64 savedRegsSystem[34];
     static uint64 systemStack[DEFAULT_STACK_SIZE];
     static void * systemStackPointer;
+    static void * savedRegsSystemPointer;
 private:
     _thread(void (*body)(void *), void* arg, void* stack_space);
 

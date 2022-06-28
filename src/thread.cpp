@@ -12,6 +12,7 @@ extern "C" void saveRegisters();
 
 
 uint64 _thread::savedRegsSystem[34] = {6};
+void * _thread::savedRegsSystemPointer = savedRegsSystem;
 uint64 _thread::systemStack[DEFAULT_STACK_SIZE] = {6};
 void * _thread::systemStackPointer = &systemStack[DEFAULT_STACK_SIZE];
 

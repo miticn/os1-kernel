@@ -1,20 +1,7 @@
 .extern handleSupervisorTrap
 
-.word
 .extern _ZN7_thread18systemStackPointerE
-.type _ZN7_thread18systemStackPointerE, @object
-
-.word
-.extern _ZN7_thread15savedRegsSystemE
-.type _ZN7_thread18systemStackPointerE, @object
-
-.global savedRegsSystem
-savedRegsSystem:
-    .quad 1
-
-.global systemStackPointer
-systemStackPointer:
-    .quad 1
+.extern _ZN7_thread22savedRegsSystemPointerE
 
 .align 4
 .global supervisorTrap
@@ -22,7 +9,7 @@ supervisorTrap:
     addi sp,sp, -8
     sd x28, 0x00(sp) # old x28 on thread stack
 
-    ld x28, savedRegsSystem# set x28 to system regs
+    ld x28, _ZN7_thread22savedRegsSystemPointerE# set x28 to system regs
 
 
     sd x1, 0x08(x28)
@@ -65,12 +52,12 @@ supervisorTrap:
 
     #save all regs x0-x31 + sp on system stack
 
-    ld sp, systemStackPointer #load system stack
+    ld sp, _ZN7_thread18systemStackPointerE #load system stack
     call handleSupervisorTrap
 
 
     # restore old regs
-    ld sp, savedRegsSystem
+    ld sp, _ZN7_thread22savedRegsSystemPointerE
     ld x1, 0x08(sp)
     #ld x2, 0x10(sp) x2 is stack pointer
     ld x3, 0x18(sp)
