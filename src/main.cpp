@@ -9,10 +9,14 @@
 #include "../h/example_functions.h"
 #include "../h/thread.hpp"
 #include "../h/scheduler.hpp"
-void main(){
+void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
+}
 
+void main(){
+    enableInterupt();
+/*
     char* c = new char;
     int* in = new int;
     long* lg = new long;
@@ -22,19 +26,17 @@ void main(){
 
     mem_free(in);
     mem_free(lg);
-    if(i==0){ __putc('i');}
-    printString("Zdravo ljudi!");
+    */
+    //if(i==0){ __putc('i');}
+    printString("Zdravo ljudi!\n");
 
-    thread_t threads[4];
-    threads[0] = _thread::thread_create(nullptr,nullptr,nullptr);
+    thread_t threads[3];
 
-    void *stack[2];
-    stack[0] = mem_alloc(DEFAULT_STACK_SIZE);
-    stack[1] = mem_alloc(DEFAULT_STACK_SIZE);
-    stack[0] = (char*)stack[0]+DEFAULT_STACK_SIZE;
-    stack[1] = (char*)stack[1]+DEFAULT_STACK_SIZE;
-    threads[1] = _thread::thread_create(function1,nullptr,stack[0]);
-    threads[2] = _thread::thread_create(function2,nullptr,stack[1]);
+    thread_create(&threads[0],nullptr,nullptr);
+
+    thread_create(&threads[1] ,function1,nullptr);
+    thread_create(&threads[2] ,function2,nullptr);
+
     _thread::running = threads[0];
 
 

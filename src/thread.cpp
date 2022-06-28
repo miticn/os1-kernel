@@ -4,13 +4,17 @@
 #include "../h/thread.hpp"
 #include "../h/scheduler.hpp"
 #include "../h/syscall_cpp.h"
+#include "../h/mem.h"
 
 extern "C" void retriveRegisters();
 extern "C" void saveRegisters();
 
 thread_t _thread::running=0;
-thread_t _thread::thread_create(void (*start_routine)(void *), void *arg, void *stack_space) {
-    return new _thread(start_routine,arg,stack_space);
+int _thread::thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space){
+    thread_t test = new _thread(start_routine,arg,stack_space);
+    *handle = test;
+    if(*handle== 0 ) return -9;
+    return 0;
 }
 
 void _thread::yield(){
@@ -36,3 +40,8 @@ _thread::_thread(void (*body)(void *), void* arg, void* stack_space):
 {
     if(body!=0) Scheduler::push(this);
 };//add args later
+
+
+void *_thread::operator new(size_t size){
+    return __mem_alloc(getNumOfBlocks(size));
+}

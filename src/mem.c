@@ -13,6 +13,11 @@ typedef struct header{
 static void *first_free;
 static int init = 0;
 
+size_t getNumOfBlocks(size_t size) {
+    if ((size + sizeof(size_t)) % MEM_BLOCK_SIZE == 0) return (size + sizeof(size_t));
+    else return ((size + sizeof(size_t)) / MEM_BLOCK_SIZE + 1);
+}
+
 //Keep number of blocks allocated in first block
 void* __mem_alloc(size_t blocks){
     //for first alloc;

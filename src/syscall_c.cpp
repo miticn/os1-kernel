@@ -6,9 +6,7 @@
 //always use ecall
 
 void* mem_alloc(size_t size){
-    size_t blocks;
-    if ((size+sizeof(size_t)) % MEM_BLOCK_SIZE == 0) blocks = (size+sizeof(size_t));
-    else blocks = ((size+sizeof(size_t)) / MEM_BLOCK_SIZE + 1);
+    size_t blocks = getNumOfBlocks(size);
 
     __asm__ volatile ("mv a1, %[write] " : : [write] "r" (blocks));//set first parametar
     __asm__ volatile ("mv a0, %[write] " : : [write] "r" (MEM_ALLOC_CODE));//set a0 to function code
@@ -28,7 +26,34 @@ int mem_free(void* ptr){
 
 
 int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg){//allocate stack
-    return 0;
+    thread_t* hand= handle;
+    void(*body)(void*) = start_routine;
+    void* ar=arg;
+    void* stack;
+    if(body!=0) {
+        stack = mem_alloc(DEFAULT_STACK_SIZE);
+        stack = (char*)stack+DEFAULT_STACK_SIZE;
+    }
+    else
+        stack = 0;
+
+    if(body!=0 && stack == 0) return -5;
+
+
+
+    __asm__ volatile ("mv a1, %[write] " : : [write] "r" (hand));//set first parametar
+    __asm__ volatile ("mv a2, %[write] " : : [write] "r" (body));//set 2 parametar
+    __asm__ volatile ("mv a3, %[write] " : : [write] "r" (ar));//set 3 parametar
+    __asm__ volatile ("mv a4, %[write] " : : [write] "r" (stack));//set 4 parametar
+    __asm__ volatile ("mv a0, %[write] " : : [write] "r" (THREAD_CREATE_CODE));//set a0 to function code
+    __asm__ volatile("ecall");
+
+
+    int ret_val;
+    __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
+
+
+    return ret_val;
 }
 
 int thread_exit (){

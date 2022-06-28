@@ -2,6 +2,7 @@
 #include "../h/abi_codes.h"
 #include "../lib/hw.h"
 #include "../h/mem.h"
+#include "../h/thread.hpp"
 
 #include "../lib/console.h"
 
@@ -9,7 +10,13 @@
 uint64 timerCount = 8;
 extern "C" void handleSupervisorTrap(){
     uint64 scause,syscall_code;
+    uint64 a1,a2,a3,a4;
     __asm__ volatile ("mv %[read], a0" : [read] "=r" (syscall_code));//get syscall_code
+
+    __asm__ volatile ("mv %[read], a1" : [read] "=r" (a1));
+    __asm__ volatile ("mv %[read], a2" : [read] "=r" (a2));
+    __asm__ volatile ("mv %[read], a3" : [read] "=r" (a3));
+    __asm__ volatile ("mv %[read], a4" : [read] "=r" (a4));
 
     __asm__ volatile ("csrr %[read], scause" : [read] "=r"(scause));//get scause
     if(scause==0x08UL || scause==0x09UL) {
@@ -22,22 +29,32 @@ extern "C" void handleSupervisorTrap(){
 
 
 
-        switch((uint64)syscall_code){
+        switch((uint64)syscall_code) {
             case MEM_ALLOC_CODE: {
                 size_t sz;
-                __asm__ volatile ("mv %[read], a1" : [read] "=r" (sz));//get first param
+                __asm__ volatile ("mv %[read], a1" : [read] "=r"(sz));//get first param
                 void *ptr = __mem_alloc(sz);
-                __asm__ volatile ("mv a0, %[write] " : : [write] "r" (ptr));//set return value
+                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ptr));//set return value
             }
                 break;
-            case MEM_FREE_CODE:{
-                void* ptr;
-                __asm__ volatile ("mv %[read], a1" : [read] "=r" (ptr));//get first param
+            case MEM_FREE_CODE: {
+                void *ptr;
+                __asm__ volatile ("mv %[read], a1" : [read] "=r"(ptr));//get first param
                 int ret = __mem_free(ptr);
-                __asm__ volatile ("mv a0, %[write] " : : [write] "r" (ret));//set return value
+                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set return value
             }
                 break;
-            case THREAD_CREATE_CODE:
+            case THREAD_CREATE_CODE: {
+                thread_t *handle = (thread_t *) a1;
+                void (*body)(void *) = (void (*)(void *)) a2;
+                void *ar = (void *) a3;
+                void *stack = (void *) a4;
+                int ret_val;
+
+                ret_val = _thread::thread_create(handle, body, ar, stack);
+
+                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret_val));//set ret value
+            }
                 break;
             case THREAD_EXIT_CODE:
                 break;
@@ -58,7 +75,6 @@ extern "C" void handleSupervisorTrap(){
             case PUTC_CODE:
                 break;
         }
-
         asm volatile("csrc sip, 0x02");
     }
     else{//if async return a0 to prev value

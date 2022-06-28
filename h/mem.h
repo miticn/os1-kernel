@@ -11,6 +11,7 @@
     extern "C" {
 #endif
 
+    size_t getNumOfBlocks(size_t size);
     void* __mem_alloc(size_t size);
 
     int __mem_free(void* ptr);

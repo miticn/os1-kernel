@@ -6,7 +6,7 @@ class _thread{
 public:
     static void yield();
 
-    static thread_t thread_create(void(*start_routine)(void*), void* arg, void* stack_space);
+    static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space);
     class SchedulerNode{
     private:
         thread_t next;
@@ -17,6 +17,8 @@ public:
     SchedulerNode myNode;
 
     static thread_t running;
+
+    void * operator new(size_t size);
 private:
     _thread(void (*body)(void *), void* arg, void* stack_space);
 
