@@ -1,5 +1,6 @@
 #pragma once
 #include "../lib/hw.h"
+
 class _thread;
 typedef _thread* thread_t;
 class _thread{
@@ -21,6 +22,11 @@ public:
 
     static void * operator new(size_t size);
     static void operator delete(void *p);
+
+
+    static uint64 savedRegsSystem[34];
+    static uint64 systemStack[DEFAULT_STACK_SIZE];
+    static void * systemStackPointer;
 private:
     _thread(void (*body)(void *), void* arg, void* stack_space);
 

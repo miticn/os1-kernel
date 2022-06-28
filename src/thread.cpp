@@ -6,8 +6,14 @@
 #include "../h/syscall_cpp.h"
 #include "../h/mem.h"
 
+
 extern "C" void retriveRegisters();
 extern "C" void saveRegisters();
+
+
+uint64 _thread::savedRegsSystem[34] = {6};
+uint64 _thread::systemStack[DEFAULT_STACK_SIZE] = {6};
+void * _thread::systemStackPointer = &systemStack[DEFAULT_STACK_SIZE];
 
 thread_t _thread::running=0;
 int _thread::thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space){

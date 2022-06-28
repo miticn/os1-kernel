@@ -8,12 +8,17 @@
 #include "../h/example_functions.h"
 #include "../h/thread.hpp"
 #include "../h/scheduler.hpp"
+
+extern "C" void* savedRegsSystem;
+extern "C" void* systemStackPointer;
 void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
 }
 
 void main(){
+    savedRegsSystem = _thread::savedRegsSystem;
+    systemStackPointer = _thread::systemStackPointer;
     enableInterupt();
 /*
     char* c = new char;
