@@ -7,6 +7,7 @@ public:
     static void yield();
 
     static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space);
+    static int thread_exit();
     class SchedulerNode{
     private:
         thread_t next;
@@ -18,7 +19,8 @@ public:
 
     static thread_t running;
 
-    void * operator new(size_t size);
+    static void * operator new(size_t size);
+    static void operator delete(void *p);
 private:
     _thread(void (*body)(void *), void* arg, void* stack_space);
 
@@ -33,7 +35,7 @@ private:
 
     static void contextSwitch(Context *oldContext, Context *newContext);//yield u projektu?
     static void dispatch();
+    static void exit(Context *newContext);
 };
-int _thread_create(thread_t* handle, void(*start_routine)(void*), void* arg, void* stack_space);
 int _thread_exit ();
 void _thread_dispatch ();

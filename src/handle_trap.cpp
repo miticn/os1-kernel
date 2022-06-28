@@ -56,9 +56,14 @@ extern "C" void handleSupervisorTrap(){
                 __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret_val));//set ret value
             }
                 break;
-            case THREAD_EXIT_CODE:
+            case THREAD_EXIT_CODE: {
+                int ret = _thread::thread_exit();
+
+                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set ret value
+            }
                 break;
             case THREAD_DISPATCH_CODE:
+                //_thread::
                 break;
             case SEM_OPEN_CODE:
                 break;
@@ -78,9 +83,9 @@ extern "C" void handleSupervisorTrap(){
         }
         asm volatile("csrc sip, 0x02");
     }
-    else{//if async return a0 to prev value
-        asm volatile("ld x10, 0x50(sp)");
-    }
+    //else{//if async return a0 to prev value
+        //asm volatile("ld x10, 0x50(sp)");
+    //}
     if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt?
         timerCount++;
         if(timerCount >= 50){
@@ -88,6 +93,7 @@ extern "C" void handleSupervisorTrap(){
             __putc('\n');
             timerCount = 0;
         }
+        asm volatile("ld x10, 0x50(sp)");
         asm volatile("csrc sip, 0x02");
 
     }

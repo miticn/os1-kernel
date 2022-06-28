@@ -44,3 +44,15 @@ _thread::_thread(void (*body)(void *), void* arg, void* stack_space):
 void *_thread::operator new(size_t size){
     return __mem_alloc(getNumOfBlocks(size));
 }
+void _thread::operator delete(void *p){
+    ((thread_t)p)->stack = ((char*)((thread_t)p)->stack)- DEFAULT_STACK_SIZE;
+    mem_free(((thread_t)p)->stack);
+    mem_free(p);
+}
+
+int _thread::thread_exit() {
+    delete running;
+    running = Scheduler::get();
+    _thread::exit(&running->myContext);
+    return -100;
+}

@@ -61,10 +61,14 @@ int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg){//al
 }
 
 int thread_exit (){
+    setParams(THREAD_EXIT_CODE,0,0,0,0);
+    __asm__ volatile("ecall");
     return 0;
 }
 
 void thread_dispatch (){
+    setParams(THREAD_DISPATCH_CODE,0,0,0,0);
+    __asm__ volatile("ecall");
 
 }
 
