@@ -6,7 +6,6 @@
 #define PROJECT_BASE_EXAMPLE_FUNCTIONS_H
 
 #include "../h/syscall_c.h"
-#include "../h/thread.hpp"
 
 void printString(char const *string){
     for(char const * chr = string; *chr!='\0';chr++){
@@ -17,15 +16,14 @@ void printString(char const *string){
 void function1(void *param){
     while(1){
         printString("Function1 \n");
-        thread_exit();
-        _thread::yield();
+        thread_dispatch();
     }
 }
 
 void function2(void *param){
     while(1){
         printString("Function2 \n");
-        _thread::yield();
+        thread_dispatch();
     }
 }
 

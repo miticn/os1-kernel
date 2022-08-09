@@ -7,8 +7,8 @@
 #include "../h/mem.h"
 
 
-extern "C" void retriveRegisters();
-extern "C" void saveRegisters();
+extern "C" void retriveRegistersFromThreadStackToSys(void *threadStack);
+extern "C" void saveRegistersFromSysToThreadStack(void *threadStack);
 
 
 uint64 _thread::savedRegsSystem[34] = {6};
@@ -23,20 +23,16 @@ int _thread::thread_create(thread_t* handle ,void(*start_routine)(void*), void* 
     return 0;
 }
 
-void _thread::yield(){
-    saveRegisters();
-
-    _thread::dispatch();
-
-    retriveRegisters();
-}
-
 void _thread::dispatch(){
+    saveRegistersFromSysToThreadStack(&running->myContext);
+
     thread_t old = running;
     Scheduler::push(old);
     running = Scheduler::get();
 
-    _thread::contextSwitch(&old->myContext, &running->myContext);
+    _thread::contextSwitch(&old->myContext, &running->myContext);//switch ra and sp
+
+    retriveRegistersFromThreadStackToSys(&running->myContext);
 }
 
 _thread::_thread(void (*body)(void *), void* arg, void* stack_space):

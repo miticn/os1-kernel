@@ -34,9 +34,10 @@ void main(){
     thread_t threads[3];
 
     thread_create(&threads[0],nullptr,nullptr);
-
     thread_create(&threads[1] ,function1,nullptr);
-    thread_create(&threads[2] ,function2,nullptr);
+    //thread_create(&threads[2] ,function2,nullptr);
+
+
 
     _thread::running = threads[0];
 
@@ -46,7 +47,7 @@ void main(){
         printString("Main\n");
         thread_t test = Scheduler::firstGet();
         if(test==nullptr) putc('c');
-        _thread::yield();
+        thread_dispatch();
     }
     delete threads[0];
     delete threads[1];

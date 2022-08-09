@@ -5,7 +5,7 @@ class _thread;
 typedef _thread* thread_t;
 class _thread{
 public:
-    static void yield();
+    static void dispatch();
 
     static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space);
     static int thread_exit();
@@ -46,7 +46,6 @@ private:
     Context myContext;
 
     static void contextSwitch(Context *oldContext, Context *newContext);//yield u projektu?
-    static void dispatch();
 };
 int _thread_exit ();
 void _thread_dispatch ();

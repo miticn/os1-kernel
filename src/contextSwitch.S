@@ -1,89 +1,67 @@
-.global saveRegisters
-.global retriveRegisters
+.global saveRegistersFromSysToThreadStack
+.global retriveRegistersFromThreadStackToSys
 .global _ZN7_thread13contextSwitchEPNS_7ContextES1_
 .global _ZN7_thread4exitEPNS_7ContextE
 .global setParams
 
-saveRegisters:
+.extern _ZN7_thread22savedRegsSystemPointerE
+
+saveRegistersFromSysToThreadStack:#a0 thread sp
+
+    mv a1, sp #old sp backup
+    ld a2, _ZN7_thread22savedRegsSystemPointerE # address of saved regs from last thread
+    ld sp, 2*8(a2) #thread sp
+
     addi sp,sp, -256
 
     #sd x0, 0x00(sp)
     #sd x1, 0x08(sp)
     #sd x2, 0x10(sp)
-    sd x3, 0x18(sp)
-    sd x4, 0x20(sp)
-    sd x5, 0x28(sp)
-    sd x6, 0x30(sp)
-    sd x7, 0x38(sp)
-    sd x8, 0x40(sp)
-    sd x9, 0x48(sp)
-    sd x10, 0x50(sp)
-    sd x11, 0x58(sp)
-    sd x12, 0x60(sp)
-    sd x13, 0x68(sp)
-    sd x14, 0x70(sp)
-    sd x15, 0x78(sp)
-    sd x16, 0x80(sp)
-    sd x17, 0x88(sp)
-    sd x18, 0x90(sp)
-    sd x19, 0x98(sp)
-    sd x20, 0xa0(sp)
-    sd x21, 0xa8(sp)
-    sd x22, 0xb0(sp)
-    sd x23, 0xb8(sp)
-    sd x24, 0xc0(sp)
-    sd x25, 0xc8(sp)
-    sd x26, 0xd0(sp)
-    sd x27, 0xd8(sp)
-    sd x28, 0xe0(sp)
-    sd x29, 0xe8(sp)
-    sd x30, 0xf0(sp)
-    sd x31, 0xf8(sp)
+
+    #use x28 for temp load
+    .irp index, 3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+        ld x28, \index*8(a2)
+        sd x28, \index*8(sp)
+    .endr
+
+    mv sp,a1 #restore system sp
     ret
 
-retriveRegisters:
+retriveRegistersFromThreadStackToSys:#a0 thread sp
      #ld x0, 0x00(sp)
      #ld x1, 0x08(sp)
      #ld x2, 0x10(sp)
-     ld x3, 0x18(sp)
-     ld x5, 0x28(sp)
-     ld x4, 0x20(sp)
-     ld x6, 0x30(sp)
-     ld x7, 0x38(sp)
-     ld x8, 0x40(sp)
-     ld x9, 0x48(sp)
-     ld x10, 0x50(sp)
-     ld x11, 0x58(sp)
-     ld x12, 0x60(sp)
-     ld x13, 0x68(sp)
-     ld x14, 0x70(sp)
-     ld x15, 0x78(sp)
-     ld x16, 0x80(sp)
-     ld x17, 0x88(sp)
-     ld x18, 0x90(sp)
-     ld x19, 0x98(sp)
-     ld x20, 0xa0(sp)
-     ld x21, 0xa8(sp)
-     ld x22, 0xb0(sp)
-     ld x23, 0xb8(sp)
-     ld x24, 0xc0(sp)
-     ld x25, 0xc8(sp)
-     ld x26, 0xd0(sp)
-     ld x27, 0xd8(sp)
-     ld x28, 0xe0(sp)
-     ld x29, 0xe8(sp)
-     ld x30, 0xf0(sp)
-     ld x31, 0xf8(sp)
 
-     addi sp, sp, 256
-     ret
+    mv a1, sp #old sp backup
+    ld sp, 0x08(a0) #thread sp
+    ld a2, _ZN7_thread22savedRegsSystemPointerE # address of saved regs from last thread
 
-_ZN7_thread13contextSwitchEPNS_7ContextES1_:
-    sd ra, 0x00(a0)
-    sd sp, 0x08(a0)
+    ld sp, 2*8(a2)
+    .irp index, 3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+        ld x28, \index*8(sp)
+        sd x28, \index*8(a2)
+    .endr
 
-    ld ra, 0x00(a1)
-    ld sp, 0x08(a1)
+    #mv sp,a1 #restore system sp
+    #addi sp, sp, 256
+    csrc sip, 0x02
+    sret
+
+_ZN7_thread13contextSwitchEPNS_7ContextES1_:# a0 old, a1 -new
+    #save sepc to old thread
+    csrr x28, sepc
+    sd x28, 0x00(a0)
+
+    #get sp from saved regs and store to old thread
+    ld x28, _ZN7_thread22savedRegsSystemPointerE
+    ld x29, 0x10(x28)
+    sd x29, 0x08(a0)
+
+    #load new thread pc to sepc
+    ld x28, 0x00(a1)
+    csrw sepc,x28
+
+    #ld sp, 0x08(a1)#load new sp to sp
     ret
 
 setParams:
@@ -92,4 +70,5 @@ setParams:
 _ZN7_thread4exitEPNS_7ContextE:
     ld ra, 0x00(a0)
     ld sp, 0x08(a0)
+    csrc sip, 0x02
     ret

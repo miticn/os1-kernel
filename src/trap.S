@@ -13,7 +13,7 @@ supervisorTrap:
 
 
     sd x1, 0x08(x28)
-    sd x2, 0x10(x28)
+    #sd x2, 0x10(x28) stack pointer
     sd x3, 0x18(x28)
     sd x4, 0x20(x28)
     sd x5, 0x28(x28)
@@ -48,7 +48,7 @@ supervisorTrap:
     sd x29, 0xe0(x28) #old x28 save to savedRegs
 
     addi sp,sp, 8 #free mem from stack
-    sd sp, 0x00(x28) # store stack pointer
+    sd sp, 0x10(x28) # store stack pointer
 
     #save all regs x0-x31 + sp on system stack
 
@@ -67,7 +67,7 @@ supervisorTrap:
     ld x7, 0x38(sp)
     ld x8, 0x40(sp)
     ld x9, 0x48(sp)
-    #ld x10, 0x50(sp) return value removed
+    ld x10, 0x50(sp) #return value removed
     ld x11, 0x58(sp)
     ld x12, 0x60(sp)
     ld x13, 0x68(sp)
@@ -90,7 +90,7 @@ supervisorTrap:
     ld x30, 0xf0(sp)
     ld x31, 0xf8(sp)
 
-    ld sp, 0x00(sp)
+    ld sp, 0x10(sp)
     #restore all regs x0-x31
 
     sret
