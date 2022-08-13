@@ -29,13 +29,13 @@ void main(){
     mem_free(lg);
     */
     //if(i==0){ putc('i');}
-    printString("Zdravo ljudi!\n");
 
     thread_t threads[3];
 
     thread_create(&threads[0],nullptr,nullptr);
+
+    thread_create(&threads[2] ,function2,nullptr);
     thread_create(&threads[1] ,function1,nullptr);
-    //thread_create(&threads[2] ,function2,nullptr);
 
 
 

@@ -6,6 +6,7 @@
 #define PROJECT_BASE_EXAMPLE_FUNCTIONS_H
 
 #include "../h/syscall_c.h"
+#include "../lib/console.h"
 
 void printString(char const *string){
     for(char const * chr = string; *chr!='\0';chr++){
@@ -18,6 +19,7 @@ void function1(void *param){
         printString("Function1 \n");
         thread_dispatch();
     }
+    console_handler();
 }
 
 void function2(void *param){

@@ -6,17 +6,20 @@
 #include "../h/syscall_cpp.h"
 #include "../h/mem.h"
 
-
 extern "C" void retriveRegistersFromThreadStackToSys(void *threadStack);
 extern "C" void saveRegistersFromSysToThreadStack(void *threadStack);
 
 
 uint64 _thread::savedRegsSystem[34] = {6};
 void * _thread::savedRegsSystemPointer = savedRegsSystem;
-uint64 _thread::systemStack[DEFAULT_STACK_SIZE] = {6};
-void * _thread::systemStackPointer = &systemStack[DEFAULT_STACK_SIZE];
+uint64 _thread::systemStack[DEFAULT_STACK_SIZE*MEM_BLOCK_SIZE] = {6};
+void * _thread::systemStackPointer = &systemStack[DEFAULT_STACK_SIZE*MEM_BLOCK_SIZE];
 
 thread_t _thread::running=0;
+
+void _thread::setReturnValue(uint64 val) {
+    savedRegsSystem[10] = val;
+}
 int _thread::thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space){
     *handle = new _thread(start_routine,arg,stack_space);
     if(*handle== 0 ) return -9;
@@ -30,7 +33,7 @@ void _thread::dispatch(){
     Scheduler::push(old);
     running = Scheduler::get();
 
-    _thread::contextSwitch(&old->myContext, &running->myContext);//switch ra and sp
+    //_thread::contextSwitch(&old->myContext, &running->myContext);//switch ra and sp
 
     retriveRegistersFromThreadStackToSys(&running->myContext);
 }

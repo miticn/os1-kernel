@@ -12,16 +12,13 @@ void* mem_alloc(size_t size){
 
 
     setParams(MEM_ALLOC_CODE,blocks,0,0,0);
-    //__asm__ volatile ("mv a0, %[write] " : : [write] "r" (MEM_ALLOC_CODE));//set a0 to function code
-    //__asm__ volatile ("mv a1, %[write] " : : [write] "r" (blocks));//set first parametar
     __asm__ volatile("ecall");
     void *ptr;
     __asm__ volatile ("mv %[read], a0" : [read] "=r" (ptr));//get return value
     return ptr;
 }
 int mem_free(void* ptr){
-    __asm__ volatile ("mv a1, %[write] " : : [write] "r" ((uint64)ptr));//set first parametar
-    __asm__ volatile ("mv a0, %[write] " : : [write] "r" (MEM_FREE_CODE));//set a0 to function code
+    setParams(MEM_FREE_CODE,(uint64)ptr,0,0,0);
     __asm__ volatile("ecall");
     int ret;
     __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret));//get return value
@@ -36,7 +33,11 @@ int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg){//al
     void* stack;
     if(body!=0) {
         stack = mem_alloc(DEFAULT_STACK_SIZE);
-        stack = (char*)stack+DEFAULT_STACK_SIZE;
+        stack = (char*)stack+DEFAULT_STACK_SIZE-256;
+        uint64* tmpstack=(uint64*)stack;
+        for(int i = 0;i<32;i++){
+            *(tmpstack+i)=0;
+        }
     }
     else
         stack = 0;
@@ -44,12 +45,7 @@ int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg){//al
     if(body!=0 && stack == 0) return -5;
 
 
-
-    __asm__ volatile ("mv a1, %[write] " : : [write] "r" (hand));//set first parametar
-    __asm__ volatile ("mv a2, %[write] " : : [write] "r" (body));//set 2 parametar
-    __asm__ volatile ("mv a3, %[write] " : : [write] "r" (ar));//set 3 parametar
-    __asm__ volatile ("mv a4, %[write] " : : [write] "r" (stack));//set 4 parametar
-    __asm__ volatile ("mv a0, %[write] " : : [write] "r" (THREAD_CREATE_CODE));//set a0 to function code
+    setParams(THREAD_CREATE_CODE, (uint64)(hand), (uint64)body, (uint64)ar, (uint64)stack);
     __asm__ volatile("ecall");
 
 

@@ -11,9 +11,9 @@ supervisorTrap:
 
     ld x28, _ZN7_thread22savedRegsSystemPointerE# set x28 to system regs
 
-
+    sd x0, 0x00(x28)
     sd x1, 0x08(x28)
-    #sd x2, 0x10(x28) stack pointer
+    #sd x2, 0x10(x28)# stack pointer
     sd x3, 0x18(x28)
     sd x4, 0x20(x28)
     sd x5, 0x28(x28)
@@ -53,6 +53,7 @@ supervisorTrap:
     #save all regs x0-x31 + sp on system stack
 
     ld sp, _ZN7_thread18systemStackPointerE #load system stack
+    ld sp, 0x00(sp)
     call handleSupervisorTrap
 
 
@@ -93,4 +94,5 @@ supervisorTrap:
     ld sp, 0x10(sp)
     #restore all regs x0-x31
 
+    csrc sip, 0x02
     sret

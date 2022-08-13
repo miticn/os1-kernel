@@ -34,14 +34,16 @@ extern "C" void handleSupervisorTrap(){
                 size_t sz;
                 sz = a1;
                 void *ptr = __mem_alloc(sz);
-                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ptr));//set return value
+                _thread::setReturnValue((uint64)ptr);
+                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ptr));//set return value
             }
                 break;
             case MEM_FREE_CODE: {
                 void *ptr;
                 ptr = (void*)a1;//get first param
                 int ret = __mem_free(ptr);
-                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set return value
+                _thread::setReturnValue((uint64)ret);
+                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set return value
             }
                 break;
             case THREAD_CREATE_CODE: {
@@ -53,13 +55,15 @@ extern "C" void handleSupervisorTrap(){
 
                 ret_val = _thread::thread_create(handle, body, ar, stack);
 
-                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret_val));//set ret value
+                _thread::setReturnValue((uint64)ret_val);
+                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret_val));//set ret value
             }
                 break;
             case THREAD_EXIT_CODE: {
                 int ret = _thread::thread_exit();
 
-                __asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set ret value
+                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set ret value
+                _thread::setReturnValue((uint64)ret);
                 _thread::exit();
             }
                 break;
@@ -80,24 +84,25 @@ extern "C" void handleSupervisorTrap(){
                 break;
             case PUTC_CODE:
                 __putc(a1);
+
                 break;
         }
-        asm volatile("csrc sip, 0x02");
+        //asm volatile("csrc sip, 0x02");
     }
     //else{//if async return a0 to prev value
         //asm volatile("ld x10, 0x50(sp)");
     //}
-    if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt?
+    /*if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt?
         timerCount++;
         if(timerCount >= 50){
             __putc('a');
             __putc('\n');
             timerCount = 0;
         }
-        asm volatile("ld x10, 0x50(sp)");
-        asm volatile("csrc sip, 0x02");
+        //asm volatile("ld x10, 0x50(sp)");
+        //asm volatile("csrc sip, 0x02");
 
-    }
+    }*/
     console_handler();
 
 
