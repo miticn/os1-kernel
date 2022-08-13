@@ -12,19 +12,19 @@ thread_t Scheduler::get(){
     }
     else{
         thread_t tmp = first;
-        first = first->myNode.getNext();
-        tmp->myNode.setNext(0);
+        first = first->mySchedulerNode.getNext();
+        tmp->mySchedulerNode.setNext(0);
         return tmp;
     }
 }
 
 void Scheduler::push(thread_t thrd){
-    thrd->myNode.setNext(0);
+    thrd->mySchedulerNode.setNext(0);
     if(first==0){
         first = last = thrd;
     }
     else{
-        last->myNode.setNext(thrd);
+        last->mySchedulerNode.setNext(thrd);
         last = thrd;
     }
 }

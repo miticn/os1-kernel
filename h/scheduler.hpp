@@ -1,5 +1,7 @@
 #pragma once
 #include "thread.hpp"
+class _thread;
+typedef _thread* thread_t;
 
 class Scheduler{
 private:
