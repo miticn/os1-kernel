@@ -43,8 +43,9 @@ _thread::_thread(void (*body)(void *), void* arg, void* stack_space):
         stack(stack_space),
         myContext({(uint64)body,(uint64)stack_space})
 {
+    if (stack!=0) ((uint64*)stack)[10]=(uint64)arg;
     if(body!=0) Scheduler::push(this);
-};//add args later
+};
 
 
 void *_thread::operator new(size_t size){

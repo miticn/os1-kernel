@@ -34,7 +34,8 @@ void main(){
 
     thread_create(&threads[0],nullptr,nullptr);
 
-    thread_create(&threads[2] ,function2,nullptr);
+    int arg[2] = {13,90};
+    thread_create(&threads[2] ,function2,&arg);
     thread_create(&threads[1] ,function1,nullptr);
 
 

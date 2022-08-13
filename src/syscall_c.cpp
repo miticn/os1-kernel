@@ -33,6 +33,8 @@ int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg){//al
     void* stack;
     if(body!=0) {
         stack = mem_alloc(DEFAULT_STACK_SIZE);
+
+        //alocate space for first pop and set to 0 everything
         stack = (char*)stack+DEFAULT_STACK_SIZE-256;
         uint64* tmpstack=(uint64*)stack;
         for(int i = 0;i<32;i++){

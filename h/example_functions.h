@@ -19,11 +19,11 @@ void function1(void *param){
         printString("Function1 \n");
         thread_dispatch();
     }
-    console_handler();
 }
 
 void function2(void *param){
     while(1){
+        ((int*)param)[0]=1;
         printString("Function2 \n");
         thread_dispatch();
     }
