@@ -61,10 +61,8 @@ extern "C" void handleSupervisorTrap(){
                 break;
             case THREAD_EXIT_CODE: {
                 int ret = _thread::thread_exit();
-
-                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set ret value
-                _thread::setReturnValue((uint64)ret);
-                _thread::exit();
+                if (ret!=0)
+                    _thread::setReturnValue((uint64)ret);
             }
                 break;
             case THREAD_DISPATCH_CODE:

@@ -9,6 +9,7 @@ public:
 
     static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space);
     static int thread_exit();
+    static int delThread(thread_t);
     class SchedulerNode{
     private:
         thread_t next;
@@ -24,9 +25,6 @@ public:
     };
 
     static thread_t running;
-
-    static void exit();
-    static void exit(Context *newContext);
 
     static void * operator new(size_t size);
     static void operator delete(void *p);

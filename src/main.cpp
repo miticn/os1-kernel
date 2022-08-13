@@ -48,7 +48,7 @@ void main(){
         printString("Main\n");
         thread_t test = Scheduler::firstGet();
         if(test==nullptr) putc('c');
-        thread_dispatch();
+        thread_exit();
     }
     delete threads[0];
     delete threads[1];

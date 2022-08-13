@@ -9,3 +9,8 @@ void* operator new (size_t size){
 void operator delete (void* ptr){
     mem_free(ptr);
 }
+
+/*
+Thread::Thread(void (*body)(void*), void* arg){
+
+}*/

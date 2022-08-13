@@ -52,17 +52,25 @@ void *_thread::operator new(size_t size){
     return __mem_alloc(getNumOfBlocks(size));
 }
 void _thread::operator delete(void *p){
-    ((thread_t)p)->stack = ((char*)((thread_t)p)->stack)- DEFAULT_STACK_SIZE;
-    __mem_free(((thread_t)p)->stack);
-    __mem_free(p);
+    delThread((thread_t)p);
 }
 
-int _thread::thread_exit() {
-    delete running;
-    running = Scheduler::get();
+int _thread::delThread(thread_t p){
+    int r1 = 0;
+    if(((thread_t)p)->stack!=0) {
+        ((thread_t) p)->stack = ((char *) ((thread_t) p)->stack) - DEFAULT_STACK_SIZE + 256;
+        r1 = __mem_free(((thread_t) p)->stack);
+    }
+    int r2 = __mem_free(p);
+    if(r1 !=0 or r2!=0) return -1;
     return 0;
 }
 
-void _thread::exit() {
-    exit(&running->myContext);
+int _thread::thread_exit() {
+    int r = delThread(running);
+    if (r==0){
+        running = Scheduler::get();
+        retriveRegistersFromThreadStackToSys(&running->myContext);
+    }
+    return r;
 }
