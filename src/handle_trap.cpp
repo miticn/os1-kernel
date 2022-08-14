@@ -102,7 +102,10 @@ extern "C" void handleSupervisorTrap(){
                 break;
             case TIME_SLEEP_CODE:
                 break;
-            case GETC_CODE:
+            case GETC_CODE: {
+                char c = __getc();
+                _thread::setReturnValue((uint64) c);
+            }
                 break;
             case PUTC_CODE:
                 __putc(a1);

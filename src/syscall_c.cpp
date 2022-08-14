@@ -95,3 +95,14 @@ void putc(char c){
     setParams(PUTC_CODE,c,0,0,0);
     __asm__ volatile("ecall");
 }
+
+char getc(){
+    setParams(GETC_CODE,0,0,0,0);
+    __asm__ volatile("ecall");
+
+
+
+    char ret_val;
+    __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
+    return ret_val;
+}

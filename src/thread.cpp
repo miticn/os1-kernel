@@ -3,7 +3,7 @@
 //
 #include "../h/thread.hpp"
 #include "../h/scheduler.hpp"
-#include "../h/syscall_cpp.h"
+#include "../h/syscall_cpp.hpp"
 #include "../h/mem.h"
 
 extern "C" void retriveRegistersFromThreadStackToSys(void *threadContext);
@@ -44,7 +44,10 @@ _thread::_thread(void (*body)(void *), void* arg, void* stack_space):
         myContext({(uint64)body,(uint64)stack_space})
 {
     if (stack!=0) ((uint64*)stack)[10]=(uint64)arg;
-    if(body!=0) Scheduler::push(this);
+    if(body!=0){
+        Scheduler::push(this);
+        ((uint64*)stack)[1] = (uint64)&::thread_exit;
+    }
 };
 
 

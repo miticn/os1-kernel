@@ -2,7 +2,7 @@
 // Created by os on 6/24/22.
 //
 #include "../h/syscall_c.h"
-#include "../h/syscall_cpp.h"
+#include "../h/syscall_cpp.hpp"
 void* operator new (size_t size){
     return mem_alloc(size);
 }

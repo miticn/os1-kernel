@@ -19,6 +19,7 @@ extern "C" {
     int sem_signal (sem_t id);
 
     void putc(char c);
+    char getc();
 #ifdef __cplusplus
 }
 #endif
