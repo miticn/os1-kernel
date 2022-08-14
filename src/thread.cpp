@@ -6,8 +6,8 @@
 #include "../h/syscall_cpp.h"
 #include "../h/mem.h"
 
-extern "C" void retriveRegistersFromThreadStackToSys(void *threadStack);
-extern "C" void saveRegistersFromSysToThreadStack(void *threadStack);
+extern "C" void retriveRegistersFromThreadStackToSys(void *threadContext);
+extern "C" void saveRegistersFromSysToThreadStack(void *threadContext);
 
 
 uint64 _thread::savedRegsSystem[34] = {6};

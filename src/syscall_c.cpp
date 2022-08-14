@@ -69,6 +69,26 @@ void thread_dispatch (){
     __asm__ volatile("ecall");
 
 }
+int sem_open (sem_t* handle, unsigned init){
+    setParams(SEM_OPEN_CODE,(uint64)handle,init,0,0);
+    __asm__ volatile("ecall");
+    return 0;
+}
+int sem_close (sem_t handle){
+    setParams(SEM_CLOSE_CODE,(uint64)handle,0,0,0);
+    __asm__ volatile("ecall");
+    return 0;
+}
+int sem_wait (sem_t id){
+    setParams(SEM_WAIT_CODE,(uint64)id,0,0,0);
+    __asm__ volatile("ecall");
+    return 0;
+}
+int sem_signal (sem_t id){
+    setParams(SEM_SIGNAL_CODE,(uint64)id,0,0,0);
+    __asm__ volatile("ecall");
+    return 0;
+}
 
 
 void putc(char c){

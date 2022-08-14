@@ -3,6 +3,7 @@
 #include "../lib/hw.h"
 #include "../h/mem.h"
 #include "../h/thread.hpp"
+#include "../h/sem.hpp"
 
 #include "../lib/console.h"
 
@@ -11,12 +12,19 @@ uint64 timerCount = 8;
 extern "C" void handleSupervisorTrap(){
     uint64 scause,syscall_code;
     uint64 a1,a2,a3,a4;
-    __asm__ volatile ("mv %[read], a0" : [read] "=r" (syscall_code));//get syscall_code
+    //__asm__ volatile ("mv %[read], a0" : [read] "=r" (syscall_code));//get syscall_code
 
-    __asm__ volatile ("mv %[read], a1" : [read] "=r" (a1));
-    __asm__ volatile ("mv %[read], a2" : [read] "=r" (a2));
-    __asm__ volatile ("mv %[read], a3" : [read] "=r" (a3));
-    __asm__ volatile ("mv %[read], a4" : [read] "=r" (a4));
+    //__asm__ volatile ("mv %[read], a1" : [read] "=r" (a1));
+    //__asm__ volatile ("mv %[read], a2" : [read] "=r" (a2));
+    //__asm__ volatile ("mv %[read], a3" : [read] "=r" (a3));
+    //__asm__ volatile ("mv %[read], a4" : [read] "=r" (a4));
+
+
+    syscall_code = _thread::savedRegsSystem[10];
+    a1 = _thread::savedRegsSystem[11];
+    a2 = _thread::savedRegsSystem[12];
+    a3 = _thread::savedRegsSystem[13];
+    a4 = _thread::savedRegsSystem[14];
 
     __asm__ volatile ("csrr %[read], scause" : [read] "=r"(scause));//get scause
     if(scause==0x08UL || scause==0x09UL) {
@@ -68,13 +76,29 @@ extern "C" void handleSupervisorTrap(){
             case THREAD_DISPATCH_CODE:
                 _thread::dispatch();
                 break;
-            case SEM_OPEN_CODE:
+            case SEM_OPEN_CODE:{
+                sem_t *handle = (sem_t *) a1;
+                int init = a2;
+                *handle = new _sem(init);
+                if (*handle!=0)
+                    _thread::setReturnValue((uint64)0);
+                else
+                    _thread::setReturnValue((uint64)-33);
+            }
                 break;
             case SEM_CLOSE_CODE:
                 break;
-            case SEM_WAIT_CODE:
+            case SEM_WAIT_CODE: {
+                sem_t *handle = (sem_t *) a1;
+                int ret = (*handle)->wait();
+                _thread::setReturnValue((uint64)ret);
+            }
                 break;
-            case SEM_SIGNAL_CODE:
+            case SEM_SIGNAL_CODE:{
+                sem_t *handle = (sem_t *) a1;
+                int ret = (*handle)->signal();
+                _thread::setReturnValue((uint64)ret);
+            }
                 break;
             case TIME_SLEEP_CODE:
                 break;

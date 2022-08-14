@@ -7,13 +7,19 @@ class _thread;
 typedef _thread* thread_t;
 
 class _thread{
+private:
+    _thread(void (*body)(void *), void* arg, void* stack_space);
+
+    void (*body)(void *);
+    void *stack;
+
 public:
     static void dispatch();
 
     static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space);
     static int thread_exit();
     static int delThread(thread_t);
-    Node<thread_t> mySchedulerNode;
+    Node<thread_t> mySchedulerNode,mySemNode;
 
     struct Context{//pc and sp in Thread, rest on stack
         uint64 pc;
@@ -21,6 +27,7 @@ public:
     };
 
     static thread_t running;
+    Context myContext;
 
     static void * operator new(size_t size);
     static void operator delete(void *p);
@@ -31,16 +38,5 @@ public:
     static void * systemStackPointer;
     static void * savedRegsSystemPointer;
     static void setReturnValue(uint64 val);
-private:
-    _thread(void (*body)(void *), void* arg, void* stack_space);
 
-    void (*body)(void *);
-    void *stack;
-
-
-    Context myContext;
-
-    static void contextSwitch(Context *oldContext, Context *newContext);//yield u projektu?
 };
-int _thread_exit ();
-void _thread_dispatch ();
