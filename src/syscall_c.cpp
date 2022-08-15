@@ -57,6 +57,9 @@ int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg){//al
 
     return ret_val;
 }
+int thread_create_no_args(thread_t* handle, void(*start_routine)()){
+    return thread_create(handle, reinterpret_cast<void (*)(void *)>(start_routine), nullptr);
+}
 
 int thread_exit (){
     setParams(THREAD_EXIT_CODE,0,0,0,0);

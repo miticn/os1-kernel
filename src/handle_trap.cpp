@@ -62,7 +62,7 @@ extern "C" void handleSupervisorTrap(){
                 int ret_val;
 
                 ret_val = _thread::thread_create(handle, body, ar, stack);
-
+                //(*handle)->start();
                 _thread::setReturnValue((uint64)ret_val);
                 //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret_val));//set ret value
             }
