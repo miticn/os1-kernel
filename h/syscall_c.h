@@ -8,7 +8,8 @@ extern "C" {
     class _thread;
     typedef _thread* thread_t;
     int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg);
-    int thread_create_no_args(thread_t* handle, void(*start_routine)());
+    int thread_create_no_start(thread_t* handle, void(*start_routine)(void*), void* arg);
+    int thread_start(thread_t handle);
     int thread_exit ();
     void thread_dispatch ();
 

@@ -12,11 +12,11 @@ void operator delete (void* ptr){
 
 
 Thread::Thread(void (*body)(void*), void* arg){
-     thread_create(&this->myHandle,body,arg);
+     thread_create_no_start(&this->myHandle,body,arg);
 }
 
 int Thread::start() {
-    //thread_create(&this->myHandle,body,arg);
+    thread_start(this->myHandle);
     return 0;//have to change _thread
 }
 
@@ -25,7 +25,7 @@ void Thread::dispatch(){
 }
 
 Thread::Thread(){
-    thread_create(&this->myHandle,&Thread::wrapper,this);
+    thread_create_no_start(&this->myHandle,&Thread::wrapper,this);
 }
 int Thread::sleep(time_t){
     return 0;//??????

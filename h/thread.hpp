@@ -8,15 +8,18 @@ typedef _thread* thread_t;
 
 class _thread{
 private:
-    _thread(void (*body)(void *), void* arg, void* stack_space);
-
+    _thread(void (*body)(void *), void* arg, void* stack_space, int start=1);
     void (*body)(void *);
     void *stack;
 
+    int started;
+
 public:
+    int start();
+
     static void dispatch();
 
-    static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space);
+    static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space,int start=1);
     static int thread_exit();
     static int delThread(thread_t);
     Node<thread_t> mySchedulerNode,mySemNode;

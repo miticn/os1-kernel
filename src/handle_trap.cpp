@@ -61,10 +61,27 @@ extern "C" void handleSupervisorTrap(){
                 void *stack = (void *) a4;
                 int ret_val;
 
-                ret_val = _thread::thread_create(handle, body, ar, stack);
-                //(*handle)->start();
+                ret_val = _thread::thread_create(handle, body, ar, stack,1);
                 _thread::setReturnValue((uint64)ret_val);
                 //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret_val));//set ret value
+            }
+                break;
+            case THREAD_CREATE_NO_START_CODE: {
+                thread_t *handle = (thread_t *) a1;
+                void (*body)(void *) = (void (*)(void *)) a2;
+                void *ar = (void *) a3;
+                void *stack = (void *) a4;
+                int ret_val;
+
+                ret_val = _thread::thread_create(handle, body, ar, stack,0);
+                _thread::setReturnValue((uint64)ret_val);
+            }
+                break;
+            case THREAD_START: {
+                thread_t handle = (thread_t) a1;
+                int ret_val;
+                ret_val = handle->start();
+                _thread::setReturnValue((uint64)ret_val);
             }
                 break;
             case THREAD_EXIT_CODE: {

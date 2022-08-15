@@ -20,8 +20,8 @@ thread_t _thread::running=0;
 void _thread::setReturnValue(uint64 val) {
     savedRegsSystem[10] = val;
 }
-int _thread::thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space){
-    *handle = new _thread(start_routine,arg,stack_space);
+int _thread::thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space,int start){
+    *handle = new _thread(start_routine,arg,stack_space,start);
     if(*handle== 0 ) return -9;
     return 0;
 }
@@ -38,18 +38,27 @@ void _thread::dispatch(){
     retriveRegistersFromThreadStackToSys(&running->myContext);
 }
 
-_thread::_thread(void (*body)(void *), void* arg, void* stack_space):
+_thread::_thread(void (*body)(void *), void* arg, void* stack_space, int start):
         body(body),
         stack(stack_space),
         myContext({(uint64)body,(uint64)stack_space})
 {
     if (stack!=0) ((uint64*)stack)[10]=(uint64)arg;
     if(body!=0){
-        Scheduler::push(this);
+        if (start)
+            Scheduler::push(this);
+        this->started = start;
         ((uint64*)stack)[1] = (uint64)&::thread_exit;
     }
 };
-
+int _thread::start(){
+    if (started==0) {
+        Scheduler::push(this);
+        started = 1;
+        return 0;
+    }
+    return -5;
+}
 
 void *_thread::operator new(size_t size){
     return __mem_alloc(getNumOfBlocks(size));

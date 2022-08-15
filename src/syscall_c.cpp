@@ -57,8 +57,44 @@ int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg){//al
 
     return ret_val;
 }
-int thread_create_no_args(thread_t* handle, void(*start_routine)()){
-    return thread_create(handle, reinterpret_cast<void (*)(void *)>(start_routine), nullptr);
+int thread_create_no_start(thread_t* handle, void(*start_routine)(void*), void* arg){
+    thread_t* hand= handle;
+    void(*body)(void*) = start_routine;
+    void* ar=arg;
+    void* stack;
+    if(body!=0) {
+        stack = mem_alloc(DEFAULT_STACK_SIZE);
+
+        //alocate space for first pop and set to 0 everything
+        stack = (char*)stack+DEFAULT_STACK_SIZE-256;
+        uint64* tmpstack=(uint64*)stack;
+        for(int i = 0;i<32;i++){
+            *(tmpstack+i)=0;
+        }
+    }
+    else
+        stack = 0;
+
+    if(body!=0 && stack == 0) return -5;
+
+
+    setParams(THREAD_CREATE_NO_START_CODE, (uint64)(hand), (uint64)body, (uint64)ar, (uint64)stack);
+    __asm__ volatile("ecall");
+
+
+    int ret_val;
+    __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
+
+
+    return ret_val;
+}
+int thread_start(thread_t handle){
+    setParams(THREAD_START, (uint64)(handle), 0, 0, 0);
+    __asm__ volatile("ecall");
+
+    int ret_val;
+    __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
+    return ret_val;
 }
 
 int thread_exit (){
