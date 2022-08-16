@@ -21,6 +21,7 @@ public:
 
     static int thread_create(thread_t* handle ,void(*start_routine)(void*), void* arg, void* stack_space,int start=1);
     static int thread_exit();
+    static void thread_exit_class(thread_t handle);
     static int delThread(thread_t);
     Node<thread_t> mySchedulerNode,mySemNode;
 

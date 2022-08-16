@@ -16,8 +16,7 @@ Thread::Thread(void (*body)(void*), void* arg){
 }
 
 int Thread::start() {
-    thread_start(this->myHandle);
-    return 0;//have to change _thread
+    return thread_start(this->myHandle);
 }
 
 void Thread::dispatch(){
@@ -32,5 +31,6 @@ int Thread::sleep(time_t){
 }
 
 Thread::~Thread(){
-
+    thread_exit_class(myHandle);
+    //if running delete, if in scheduler than remove from list and delete
 }

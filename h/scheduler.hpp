@@ -12,4 +12,5 @@ public:
     static thread_t get();
     static void push(thread_t);
     static thread_t firstGet(){return first;}
+    static int removeThread(thread_t handle);
 };

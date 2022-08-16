@@ -10,6 +10,7 @@ extern "C" {
     int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg);
     int thread_create_no_start(thread_t* handle, void(*start_routine)(void*), void* arg);
     int thread_start(thread_t handle);
+    void thread_exit_class(thread_t handle);
     int thread_exit ();
     void thread_dispatch ();
 

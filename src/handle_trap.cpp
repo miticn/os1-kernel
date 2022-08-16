@@ -12,13 +12,6 @@ uint64 timerCount = 8;
 extern "C" void handleSupervisorTrap(){
     uint64 scause,syscall_code;
     uint64 a1,a2,a3,a4;
-    //__asm__ volatile ("mv %[read], a0" : [read] "=r" (syscall_code));//get syscall_code
-
-    //__asm__ volatile ("mv %[read], a1" : [read] "=r" (a1));
-    //__asm__ volatile ("mv %[read], a2" : [read] "=r" (a2));
-    //__asm__ volatile ("mv %[read], a3" : [read] "=r" (a3));
-    //__asm__ volatile ("mv %[read], a4" : [read] "=r" (a4));
-
 
     syscall_code = _thread::savedRegsSystem[10];
     a1 = _thread::savedRegsSystem[11];
@@ -43,7 +36,6 @@ extern "C" void handleSupervisorTrap(){
                 sz = a1;
                 void *ptr = __mem_alloc(sz);
                 _thread::setReturnValue((uint64)ptr);
-                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ptr));//set return value
             }
                 break;
             case MEM_FREE_CODE: {
@@ -51,7 +43,6 @@ extern "C" void handleSupervisorTrap(){
                 ptr = (void*)a1;//get first param
                 int ret = __mem_free(ptr);
                 _thread::setReturnValue((uint64)ret);
-                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret));//set return value
             }
                 break;
             case THREAD_CREATE_CODE: {
@@ -63,7 +54,6 @@ extern "C" void handleSupervisorTrap(){
 
                 ret_val = _thread::thread_create(handle, body, ar, stack,1);
                 _thread::setReturnValue((uint64)ret_val);
-                //__asm__ volatile ("mv a0, %[write] " : : [write] "r"(ret_val));//set ret value
             }
                 break;
             case THREAD_CREATE_NO_START_CODE: {
@@ -88,6 +78,11 @@ extern "C" void handleSupervisorTrap(){
                 int ret = _thread::thread_exit();
                 if (ret!=0)
                     _thread::setReturnValue((uint64)ret);
+            }
+                break;
+            case THREAD_EXIT_CLASS_CODE:{
+                thread_t handle = (thread_t ) a1;
+                _thread::thread_exit_class(handle);
             }
                 break;
             case THREAD_DISPATCH_CODE:

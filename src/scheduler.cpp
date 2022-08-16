@@ -28,3 +28,37 @@ void Scheduler::push(thread_t thrd){
         last = thrd;
     }
 }
+
+int Scheduler::removeThread(thread_t handle){
+    //find thread, keep prev, remove from list
+    thread_t prev = 0;
+    int found = 0;
+    for(thread_t i = first; i!=0;i=i->mySchedulerNode.getNext()){
+        if(i==handle){
+            found=1;
+            break;
+        }
+        prev = i;
+    }
+    if(found){
+        if (handle!=first && handle!=last)
+            prev->mySchedulerNode.setNext(handle->mySchedulerNode.getNext());
+        else{
+            if (handle==first){
+                first = first->mySchedulerNode.getNext();
+            }
+            if (handle==last){
+                if(prev==0)
+                    last = 0;
+                else{
+                    prev->mySchedulerNode.setNext(0);
+                    last = prev;
+                }
+            }
+        }
+    }
+    return !found;
+
+
+
+}

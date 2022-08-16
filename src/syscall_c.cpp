@@ -103,6 +103,11 @@ int thread_exit (){
     return 0;
 }
 
+void thread_exit_class(thread_t handle){
+    setParams(THREAD_EXIT_CLASS_CODE,(uint64)(handle),0,0,0);
+    __asm__ volatile("ecall");
+}
+
 void thread_dispatch (){
     setParams(THREAD_DISPATCH_CODE,0,0,0,0);
     __asm__ volatile("ecall");

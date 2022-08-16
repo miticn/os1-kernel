@@ -86,3 +86,19 @@ int _thread::thread_exit() {
     }
     return r;
 }
+
+void _thread::thread_exit_class(thread_t handle) {
+    if (handle==running)
+        thread_exit();
+    else{
+        //remove from scheduler and delete
+        if (handle->started){
+            int notFine = Scheduler::removeThread(handle);
+            if(!notFine)
+                delThread(handle);
+        }
+        else{
+            delThread(handle);
+        }
+    }
+}
