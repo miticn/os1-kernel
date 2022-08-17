@@ -101,14 +101,14 @@ extern "C" void handleSupervisorTrap(){
             case SEM_CLOSE_CODE:
                 break;
             case SEM_WAIT_CODE: {
-                sem_t *handle = (sem_t *) a1;
-                int ret = (*handle)->wait();
+                sem_t handle = (sem_t) a1;
+                int ret = handle->wait();
                 _thread::setReturnValue((uint64)ret);
             }
                 break;
             case SEM_SIGNAL_CODE:{
-                sem_t *handle = (sem_t *) a1;
-                int ret = (*handle)->signal();
+                sem_t handle = (sem_t) a1;
+                int ret = handle->signal();
                 _thread::setReturnValue((uint64)ret);
             }
                 break;

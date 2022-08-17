@@ -11,6 +11,8 @@
 void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
+    //uint64 mask = 256;
+    //__asm__ volatile("csrc sstatus, %[mask]" : : [mask] "r"(mask));
 }
 
 extern void userMain(void* arg);

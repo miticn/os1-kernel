@@ -32,5 +32,20 @@ int Thread::sleep(time_t){
 
 Thread::~Thread(){
     thread_exit_class(myHandle);
-    //if running delete, if in scheduler than remove from list and delete
+}
+
+Semaphore::Semaphore(unsigned int init) {
+    sem_open(&myHandle, init);
+}
+
+Semaphore::~Semaphore() {
+    sem_close(myHandle);
+}
+
+int Semaphore::wait() {
+    return sem_wait(myHandle);
+}
+
+int Semaphore::signal() {
+    return sem_signal(myHandle);
 }

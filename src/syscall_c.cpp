@@ -3,6 +3,7 @@
 #include "../h/thread.hpp"
 #include "../h/abi_codes.h"
 #include "../lib/hw.h"
+#include "../lib/console.h"
 //always use ecall
 extern "C" void setParams(uint64 a0,uint64 a1,uint64 a2,uint64 a3,uint64 a4);
 
@@ -140,13 +141,15 @@ void putc(char c){
     __asm__ volatile("ecall");
 }
 
-char getc(){
-    setParams(GETC_CODE,0,0,0,0);
-    __asm__ volatile("ecall");
+char getc(){//ain't working
+    return __getc();
+
+    //setParams(GETC_CODE,0,0,0,0);
+    //__asm__ volatile("ecall");
 
 
 
-    char ret_val;
-    __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
-    return ret_val;
+    //char ret_val;
+    //__asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
+    //return ret_val;
 }

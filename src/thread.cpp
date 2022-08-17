@@ -35,6 +35,8 @@ void _thread::dispatch(){
 
     //_thread::contextSwitch(&old->myContext, &running->myContext);//switch ra and sp
 
+    uint64 mask = 256;
+    __asm__ volatile("csrc sstatus, %[mask]" : : [mask] "r"(mask));
     retriveRegistersFromThreadStackToSys(&running->myContext);
 }
 
