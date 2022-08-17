@@ -7,7 +7,7 @@
 
 #include "../h/thread.hpp"
 #include "../h/scheduler.hpp"
-
+#include "../h/example.h"
 void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
@@ -17,7 +17,7 @@ void enableInterupt(){
 
 extern void userMain(void* arg);
 
-void main(){
+void main() {
     enableInterupt();
 /*
     char* c = new char;
@@ -34,17 +34,18 @@ void main(){
 
     thread_t threads[3];
 
-    thread_create(&threads[0],nullptr,nullptr);
+    thread_create(&threads[0], nullptr, nullptr);
 
 
     thread_create(&threads[1], &userMain, nullptr);
 
 
-
+    //thread_create(&threads[1], &function1, nullptr);
+    //thread_create(&threads[2], &function2, nullptr);
     _thread::running = threads[0];
 
 
-    while(Scheduler::firstGet()!=nullptr){
+    while (Scheduler::firstGet() != nullptr) {
         thread_dispatch();
     }
     delete threads[1];

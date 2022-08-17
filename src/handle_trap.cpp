@@ -8,7 +8,7 @@
 #include "../lib/console.h"
 
 
-uint64 timerCount = 8;
+uint64 timerCount = 0;
 extern "C" void handleSupervisorTrap(){
     uint64 scause,syscall_code;
     uint64 a1,a2,a3,a4;
@@ -81,11 +81,13 @@ extern "C" void handleSupervisorTrap(){
             }
                 break;
             case THREAD_EXIT_CLASS_CODE:{
+                timerCount = 0;
                 thread_t handle = (thread_t ) a1;
                 _thread::thread_exit_class(handle);
             }
                 break;
             case THREAD_DISPATCH_CODE:
+                timerCount = 0;
                 _thread::dispatch();
                 break;
             case SEM_OPEN_CODE:{
@@ -124,22 +126,17 @@ extern "C" void handleSupervisorTrap(){
 
                 break;
         }
-        //asm volatile("csrc sip, 0x02");
     }
-    //else{//if async return a0 to prev value
-        //asm volatile("ld x10, 0x50(sp)");
-    //}
-    /*if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt?
+    if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt
         timerCount++;
-        if(timerCount >= 50){
-            __putc('a');
-            __putc('\n');
+        if(timerCount >= DEFAULT_TIME_SLICE){
             timerCount = 0;
+            _thread::dispatch();
         }
-        //asm volatile("ld x10, 0x50(sp)");
-        //asm volatile("csrc sip, 0x02");
+        //__asm__ volatile("csrc sip, 0x02"); added at end of trap
 
-    }*/
+
+    }
     console_handler();
 
 
