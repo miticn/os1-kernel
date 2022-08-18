@@ -127,7 +127,9 @@ int sem_close (sem_t handle){
 int sem_wait (sem_t id){
     setParams(SEM_WAIT_CODE,(uint64)id,0,0,0);
     __asm__ volatile("ecall");
-    return 0;
+    int ret_val;
+    __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
+    return ret_val;
 }
 int sem_signal (sem_t id){
     setParams(SEM_SIGNAL_CODE,(uint64)id,0,0,0);

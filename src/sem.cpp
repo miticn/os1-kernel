@@ -30,6 +30,7 @@ void _sem::push(thread_t thrd){
 void _sem::wait(){
     if (value>0){//return 0 and move back to scheduler
         value--;
+        _thread::setReturnValue(0);
     }
     else if (value==0){//add to waiting list
         saveRegistersFromSysToThreadStack(&_thread::running->myContext);
@@ -64,4 +65,16 @@ void _sem::sem_open(sem_t *handle, unsigned int init) {
     (*handle)->value = init;
     (*handle)->first = 0;
     (*handle)->last = 0;
+}
+
+int _sem::sem_close(sem_t handle) {
+    thread_t i;
+    while( (i = handle->get())!=0){
+        ((uint64*)(i->myContext.sp))[10] = -34;//set return value
+        Scheduler::push(i);//return to scheduler
+    }
+    handle->first = handle->last = 0;
+
+    __mem_free(handle);
+    return 0;
 }

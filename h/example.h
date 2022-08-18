@@ -46,8 +46,16 @@ void functionSem1Test(void *param){
     char *CB = (char*)((uint64*)param)[2];
     while(1){
         sem_wait(semReadyWrite);
-        *CB= c++;
-        sem_signal(semReadyRead);
+        if(*CB<'~') {
+            *CB = c++;
+            sem_signal(semReadyRead);
+        }
+        else{
+            sem_close(semReadyWrite);
+            sem_close(semReadyRead);
+            break;
+        }
+
         //thread_dispatch();
     }
 }
@@ -56,9 +64,14 @@ void functionSem2Test(void *param){//print char from sem
     sem_t semReadyRead = (sem_t)((uint64*)param)[1];
     char *CB = (char*)((uint64*)param)[2];
     while(1){
-        sem_wait(semReadyRead);
-        putc(*CB);
-        sem_signal(semReadyWrite);
+        if (sem_wait(semReadyRead)==0) {
+            putc(*CB);
+            sem_signal(semReadyWrite);
+        }
+        else{
+            putc('\n');
+            break;
+        }
         //thread_dispatch();
     }
 }

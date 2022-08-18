@@ -100,7 +100,10 @@ extern "C" void handleSupervisorTrap(){
                     _thread::setReturnValue((uint64)-33);
             }
                 break;
-            case SEM_CLOSE_CODE:
+            case SEM_CLOSE_CODE:{
+                sem_t handle = (sem_t) a1;
+                _sem::sem_close(handle);
+            }
                 break;
             case SEM_WAIT_CODE: {
                 sem_t handle = (sem_t) a1;
