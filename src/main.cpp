@@ -37,13 +37,22 @@ void main() {
     thread_create(&threads[0], nullptr, nullptr);
 
 
-    thread_create(&threads[1], &userMain, nullptr);
+    //thread_create(&threads[1], &userMain, nullptr);
 
 
     //thread_create(&threads[1], &function1, nullptr);
     //thread_create(&threads[2], &function2, nullptr);
-    _thread::running = threads[0];
+    void *params[3];
+    char ca1;
+    sem_open((sem_t*)&params[0],1);
+    sem_open((sem_t*)&params[1],0);
+    params[2] = &ca1;
 
+    thread_create(&threads[2], &functionSem2Test, &params);
+    thread_create(&threads[1], &functionSem1Test, &params);
+
+    _thread::running = threads[0];
+    //thread_exit();
 
     while (Scheduler::firstGet() != nullptr) {
         thread_dispatch();

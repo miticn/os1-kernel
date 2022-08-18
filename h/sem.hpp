@@ -14,10 +14,9 @@ class _sem;
 typedef _sem* sem_t;
 class _sem{
 public:
-    _sem(unsigned init):value(init){};
+    static void sem_open(sem_t* handle, unsigned init);
 
-
-    int wait();
+    void wait();
     int signal();
     ~_sem(){
 

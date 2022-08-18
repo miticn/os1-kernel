@@ -93,7 +93,7 @@ extern "C" void handleSupervisorTrap(){
             case SEM_OPEN_CODE:{
                 sem_t *handle = (sem_t *) a1;
                 int init = a2;
-                *handle = new _sem(init);
+                _sem::sem_open(handle, init);
                 if (*handle!=0)
                     _thread::setReturnValue((uint64)0);
                 else
@@ -104,8 +104,8 @@ extern "C" void handleSupervisorTrap(){
                 break;
             case SEM_WAIT_CODE: {
                 sem_t handle = (sem_t) a1;
-                int ret = handle->wait();
-                _thread::setReturnValue((uint64)ret);
+                handle->wait();
+                //_thread::setReturnValue((uint64)0);
             }
                 break;
             case SEM_SIGNAL_CODE:{
@@ -127,14 +127,14 @@ extern "C" void handleSupervisorTrap(){
                 break;
         }
     }
-    if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt
+    else if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt
         timerCount++;
         if(timerCount >= DEFAULT_TIME_SLICE){
             timerCount = 0;
             _thread::dispatch();
         }
-        //__asm__ volatile("csrc sip, 0x02"); added at end of trap
-
+    }
+    else if(scause==(0x01UL<< 63 | 0x09)){//is console interupt
 
     }
     console_handler();
