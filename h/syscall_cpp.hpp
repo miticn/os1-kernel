@@ -35,12 +35,13 @@ public:
 private:
     sem_t myHandle;
 };
-/*
 class PeriodicThread : public Thread {
 protected:
     PeriodicThread (time_t period);
     virtual void periodicActivation () {}
+    static void wrapperPeriodic (void* t);
 };
+/*
 class Console {
 public:
     static char getc ();

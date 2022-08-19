@@ -49,3 +49,14 @@ int Semaphore::wait() {
 int Semaphore::signal() {
     return sem_signal(myHandle);
 }
+
+PeriodicThread::PeriodicThread(time_t period) : Thread(&PeriodicThread::wrapperPeriodic, nullptr){
+
+}
+
+void PeriodicThread::wrapperPeriodic(void *t) {
+    while(1){
+        time_sleep()
+        if(t)((PeriodicThread*)t)->periodicActivation();
+    }
+}

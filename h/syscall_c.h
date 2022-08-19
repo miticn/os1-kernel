@@ -21,6 +21,8 @@ extern "C" {
     int sem_wait (sem_t id);
     int sem_signal (sem_t id);
 
+    int time_sleep(time_t time);
+
     void putc(char c);
     char getc();
 #ifdef __cplusplus

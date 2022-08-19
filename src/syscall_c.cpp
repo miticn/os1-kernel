@@ -155,3 +155,11 @@ char getc(){//ain't working
     //__asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
     //return ret_val;
 }
+
+int time_sleep(time_t time) {
+    setParams(TIME_SLEEP_CODE,(uint64)time,0,0,0);
+    __asm__ volatile("ecall");
+    int ret_val;
+    __asm__ volatile ("mv %[read], a0" : [read] "=r" (ret_val));
+    return ret_val;
+}

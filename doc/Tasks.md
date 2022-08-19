@@ -5,8 +5,8 @@
 - [x] 5. Sistemski stek (zajednički ili pojedinačan za nit). Kompletiranje prekidne rutine čuvanjem i restauracijom registara.Promena konteksta: u operaciji yield ili u prekidnoj rutini.29
 - [x] 6. Formiranje početnog konteksta niti. Sistemski pozivi dispatch i thread_create (ABI i C API). Testiranje pomoću niti koje se nikada ne završavaju (program gasiti nasilno iz operativnog sistema domaćina).
 - [x] 7. Gašenje niti. Sistemski poziv thread_exit (C API i ABI).
-- [ ] 8. Semafori: klasa Semaphore u implementaciji jezgra u potpunosti, svi sistemski pozivi za operacije sa semaforima (ABI i C API).
-- [ ] 9. Asinhroni prekid od tajmera, raspodela vremena (promena konteksta na istek vremenskog odsečka, engl. time sharing).
+- [x] 8. Semafori: klasa Semaphore u implementaciji jezgra u potpunosti, svi sistemski pozivi za operacije sa semaforima (ABI i C API).
+- [x] 9. Asinhroni prekid od tajmera, raspodela vremena (promena konteksta na istek vremenskog odsečka, engl. time sharing).
 - [ ] 10. Uspavljivanje i buđenje niti, sistemski poziv time_sleep (C API i ABI).
 - [ ] 11. Konzola, izlazni smer (slanje podataka na ekran): bafer, interna nit jezgra, sistemski poziv putc (C API i ABI).
 - [ ] 12. Konzola, ulazni smer (prijem podataka sa tastature): bafer, prekidna rutina, sistemski poziv getc (C API i ABI).

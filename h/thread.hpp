@@ -7,14 +7,23 @@ class _thread;
 typedef _thread* thread_t;
 
 class _thread{
+public:
+    enum ThreadState { Scheduler, Semaphore, Sleep };
 private:
     _thread(void (*body)(void *), void* arg, void* stack_space, int start=1);
     void (*body)(void *);
     void *stack;
 
     int started;
-
+    time_t myTime;
+    ThreadState myState;
 public:
+    ThreadState getMyState();
+    void setMyState(ThreadState newState);
+
+    time_t getMyTime();
+    void setMyTime(time_t time);
+
     int start();
 
     static void dispatch();

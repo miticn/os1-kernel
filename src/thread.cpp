@@ -104,3 +104,19 @@ void _thread::thread_exit_class(thread_t handle) {
         }
     }
 }
+
+time_t _thread::getMyTime() {
+    return myTime;
+}
+
+void _thread::setMyTime(time_t time) {
+    this->myTime = time;
+}
+
+_thread::ThreadState _thread::getMyState() {
+    return myState;
+}
+
+void _thread::setMyState(_thread::ThreadState newState) {
+    myState = newState;
+}

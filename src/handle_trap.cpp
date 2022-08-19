@@ -4,11 +4,13 @@
 #include "../h/mem.h"
 #include "../h/thread.hpp"
 #include "../h/sem.hpp"
+#include "../h/sleep.hpp"
 
 #include "../lib/console.h"
 
 
 uint64 timerCount = 0;
+uint64 timerSleepCount = 0;
 extern "C" void handleSupervisorTrap(){
     uint64 scause,syscall_code;
     uint64 a1,a2,a3,a4;
@@ -117,7 +119,10 @@ extern "C" void handleSupervisorTrap(){
                 _thread::setReturnValue((uint64)ret);
             }
                 break;
-            case TIME_SLEEP_CODE:
+            case TIME_SLEEP_CODE:{
+                time_t time = (time_t) a1;
+                Sleep::sleep(time);
+            }
                 break;
             case GETC_CODE: {
                 char c = __getc();
@@ -136,6 +141,16 @@ extern "C" void handleSupervisorTrap(){
             timerCount = 0;
             _thread::dispatch();
         }
+        timerSleepCount++;
+        if(Sleep::isEmpty()){
+            timerSleepCount = 0;
+        }
+        while(!(Sleep::isEmpty()) && timerSleepCount>= Sleep::getTimeLeft()){
+            timerSleepCount-=Sleep::getTimeLeft();
+            thread_t tmp = Sleep::get();
+            Scheduler::push(tmp);
+        }
+
     }
     else if(scause==(0x01UL<< 63 | 0x09)){//is console interupt
 
