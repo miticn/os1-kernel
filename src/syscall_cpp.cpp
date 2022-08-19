@@ -50,13 +50,22 @@ int Semaphore::signal() {
     return sem_signal(myHandle);
 }
 
-PeriodicThread::PeriodicThread(time_t period) : Thread(&PeriodicThread::wrapperPeriodic, nullptr){
+struct PeriodicStructure{
+    PeriodicThread *t;
+    time_t time;
+};
+
+PeriodicThread::PeriodicThread(time_t period) : Thread(&PeriodicThread::wrapperPeriodic, (void*)(new (PeriodicStructure){this, period})){
 
 }
 
-void PeriodicThread::wrapperPeriodic(void *t) {
+void PeriodicThread::wrapperPeriodic(void *struc) {
+    PeriodicThread* t = ((PeriodicStructure*)struc)->t;
+    time_t time = ((PeriodicStructure*)struc)->time;
+    mem_free(struc);
     while(1){
-        time_sleep()
+        time_sleep(time);
         if(t)((PeriodicThread*)t)->periodicActivation();
+        else break;
     }
 }

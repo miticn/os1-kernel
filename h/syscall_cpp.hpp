@@ -37,8 +37,8 @@ private:
 };
 class PeriodicThread : public Thread {
 protected:
-    PeriodicThread (time_t period);
-    virtual void periodicActivation () {}
+    PeriodicThread(time_t period);
+    virtual void periodicActivation() {}
     static void wrapperPeriodic (void* t);
 };
 /*

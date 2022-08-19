@@ -33,10 +33,9 @@ void Sleep::push(thread_t thrd, time_t time) {
         prev->mySchedulerNode.setNext(thrd);
         thrd->mySchedulerNode.setNext(i);
     }
-    //increment those behind
-    for(thread_t i=thrd->mySchedulerNode.getNext(); i!=0; i = i->mySchedulerNode.getNext()){
-        i->setMyTime(i->getMyTime()+time);
-    }
+    thread_t next = thrd->mySchedulerNode.getNext();
+    if(next!=0)
+        next->setMyTime(next->getMyTime()-time);
 }
 
 void Sleep::sleep(time_t time) {

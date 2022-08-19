@@ -2,8 +2,8 @@
 // Created by os on 8/17/22.
 //
 
-#ifndef PROJECT_BASE_EXAMPLE_H
-#define PROJECT_BASE_EXAMPLE_H
+#ifndef PROJECT_BASE_EXAMPLE_HPP
+#define PROJECT_BASE_EXAMPLE_HPP
 //
 // Created by os on 6/26/22.
 //
@@ -12,6 +12,7 @@
 #define PROJECT_BASE_EXAMPLE_FUNCTIONS_H
 
 #include "../h/syscall_c.h"
+#include "../h/syscall_cpp.hpp"
 #include "../lib/console.h"
 
 void printStringE(char const *string){
@@ -76,5 +77,37 @@ void functionSem2Test(void *param){//print char from sem
     }
 }
 
+void functionPeriodicThreadTest(void *param){
+    class HelloThread : public PeriodicThread{
+    protected:
+        void periodicActivation() override{
+            printStringE("Hello\n");
+        }
+    public:
+        HelloThread(time_t time) : PeriodicThread(time){}
+    };
+    class NinjaThread : public PeriodicThread{
+    protected:
+        void periodicActivation() override{
+            printStringE("Ninja\n");
+        }
+    public:
+        NinjaThread(time_t time) : PeriodicThread(time){}
+    };
+    NinjaThread *ninja;
+    HelloThread *hello;
+
+    hello = new HelloThread(10);//1 sec
+    ninja = new NinjaThread(50);//5 sec
+
+    ninja->start();
+    hello->start();
+
+    time_sleep(1000);//100 sec
+
+    delete ninja;
+    delete hello;
+}
+
 #endif //PROJECT_BASE_EXAMPLE_FUNCTIONS_H
-#endif //PROJECT_BASE_EXAMPLE_H
+#endif //PROJECT_BASE_EXAMPLE_HPP

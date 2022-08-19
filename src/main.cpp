@@ -7,7 +7,7 @@
 
 #include "../h/thread.hpp"
 #include "../h/scheduler.hpp"
-#include "../h/example.h"
+#include "../h/example.hpp"
 void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
@@ -37,7 +37,7 @@ void main() {
     thread_create(&threads[0], nullptr, nullptr);
 
 
-    thread_create(&threads[1], &userMain, nullptr);
+    //thread_create(&threads[1], &userMain, nullptr);
 
     //context switch tests
     //thread_create(&threads[1], &function1, nullptr);
@@ -54,6 +54,9 @@ void main() {
     thread_create(&threads[2], &functionSem2Test, &params);
     thread_create(&threads[1], &functionSem1Test, &params);
     */
+
+    //Periodic thread test
+    thread_create(&threads[1],&functionPeriodicThreadTest, nullptr);
 
     _thread::running = threads[0];
     //thread_exit();
