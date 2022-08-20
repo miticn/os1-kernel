@@ -13,7 +13,6 @@
 
 #include "../h/syscall_c.h"
 #include "../h/syscall_cpp.hpp"
-#include "../lib/console.h"
 
 void printStringE(char const *string){
     for(char const * chr = string; *chr!='\0';chr++){

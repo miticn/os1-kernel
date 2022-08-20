@@ -32,7 +32,7 @@ public:
     static int thread_exit();
     static void thread_exit_class(thread_t handle);
     static int delThread(thread_t);
-    Node<thread_t> mySchedulerNode,mySemNode;
+    Node<thread_t> mySchedulerNode;
 
     struct Context{//pc and sp in Thread, rest on stack
         uint64 pc;

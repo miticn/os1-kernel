@@ -11,6 +11,8 @@ private:
 public:
     static char getc ();
     static void putc (char);
+
+    static void putc_thread_function(void *);
 };
 
 #endif //PROJECT_BASE_CONSOLE_H
