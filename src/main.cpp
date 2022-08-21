@@ -8,6 +8,7 @@
 #include "../h/thread.hpp"
 #include "../h/scheduler.hpp"
 #include "../h/example.hpp"
+#include "../h/console.h"
 void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
@@ -56,6 +57,7 @@ void main() {
     */
 
     //Periodic thread test
+    thread_create(&threads[2],&_console::putc_thread_function, nullptr);
     thread_create(&threads[1],&functionPeriodicThreadTest, nullptr);
 
     _thread::running = threads[0];

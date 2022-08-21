@@ -5,8 +5,8 @@
 #include "../h/thread.hpp"
 #include "../h/sem.hpp"
 #include "../h/sleep.hpp"
+#include "../h/console.h"
 
-#include "../lib/console.h"
 
 
 uint64 timerCount = 0;
@@ -125,13 +125,13 @@ extern "C" void handleSupervisorTrap(){
             }
                 break;
             case GETC_CODE: {
-                char c = __getc();
+                char c = _console::getc();
                 _thread::setReturnValue((uint64) c);
             }
                 break;
-            case PUTC_CODE:
-                __putc(a1);
-
+            case PUTC_CODE: {
+                _console::putc(a1);
+            }
                 break;
         }
     }
@@ -153,9 +153,12 @@ extern "C" void handleSupervisorTrap(){
 
     }
     else if(scause==(0x01UL<< 63 | 0x09)){//is console interupt
+        int code = plic_claim();
+        if (code == 0x0a){
 
+
+            plic_complete(code);
+        }
     }
-    console_handler();
-
 
 }

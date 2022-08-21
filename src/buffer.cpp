@@ -5,8 +5,8 @@
 
 char _buffer::pop() {
     if(left!=right){
-        return array[(left++)%MAX_BUFFER_SIZE];
         taken--;
+        return array[(left++)%MAX_BUFFER_SIZE];
     }
     else
         return -1;//error no more to take from
@@ -24,3 +24,7 @@ int _buffer::push(char c) {
 }
 
 _buffer::_buffer():left(0), right(0), taken(0) {}
+
+int _buffer::isEmpty() {
+    return taken<=0;
+}

@@ -7,7 +7,7 @@
 - [x] 7. Gašenje niti. Sistemski poziv thread_exit (C API i ABI).
 - [x] 8. Semafori: klasa Semaphore u implementaciji jezgra u potpunosti, svi sistemski pozivi za operacije sa semaforima (ABI i C API).
 - [x] 9. Asinhroni prekid od tajmera, raspodela vremena (promena konteksta na istek vremenskog odsečka, engl. time sharing).
-- [ ] 10. Uspavljivanje i buđenje niti, sistemski poziv time_sleep (C API i ABI).
-- [ ] 11. Konzola, izlazni smer (slanje podataka na ekran): bafer, interna nit jezgra, sistemski poziv putc (C API i ABI).
+- [x] 10. Uspavljivanje i buđenje niti, sistemski poziv time_sleep (C API i ABI).
+- [x] 11. Konzola, izlazni smer (slanje podataka na ekran): bafer, interna nit jezgra, sistemski poziv putc (C API i ABI).
 - [ ] 12. Konzola, ulazni smer (prijem podataka sa tastature): bafer, prekidna rutina, sistemski poziv getc (C API i ABI).
 - [ ] 13. C++ API u celini.

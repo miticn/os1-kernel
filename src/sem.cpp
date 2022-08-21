@@ -10,19 +10,19 @@ thread_t _sem::get(){
     }
     else{
         thread_t tmp = first;
-        first = first->mySemNode.getNext();
-        tmp->mySemNode.setNext(0);
+        first = first->mySchedulerNode.getNext();
+        tmp->mySchedulerNode.setNext(0);
         return tmp;
     }
 }
 
 void _sem::push(thread_t thrd){
-    thrd->mySemNode.setNext(0);
+    thrd->mySchedulerNode.setNext(0);
     if(first==0){
         first = last = thrd;
     }
     else{
-        last->mySemNode.setNext(thrd);
+        last->mySchedulerNode.setNext(thrd);
         last = thrd;
     }
 }
