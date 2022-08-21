@@ -155,8 +155,7 @@ extern "C" void handleSupervisorTrap(){
     else if(scause==(0x01UL<< 63 | 0x09)){//is console interupt
         int code = plic_claim();
         if (code == 0x0a){
-
-
+            _console::getc_function();
             plic_complete(code);
         }
     }

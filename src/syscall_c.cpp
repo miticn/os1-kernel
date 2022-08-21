@@ -2,6 +2,8 @@
 #include "../h/mem.h"
 #include "../h/thread.hpp"
 #include "../h/abi_codes.h"
+#include "../h/console.h"
+
 #include "../lib/hw.h"
 //always use ecall
 extern "C" void setParams(uint64 a0,uint64 a1,uint64 a2,uint64 a3,uint64 a4);
@@ -143,6 +145,7 @@ void putc(char c){
 }
 
 char getc(){//ain't working
+    sem_wait(&_console::semBufferIn);
     setParams(GETC_CODE,0,0,0,0);
     __asm__ volatile("ecall");
 

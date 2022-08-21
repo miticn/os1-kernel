@@ -15,5 +15,6 @@ public:
     char pop();
     int push(char c);
     int isEmpty();
+    int isFull();
 };
 #endif //PROJECT_BASE_BUFFER_HPP

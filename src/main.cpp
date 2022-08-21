@@ -38,7 +38,7 @@ void main() {
     thread_create(&threads[0], nullptr, nullptr);
 
 
-    //thread_create(&threads[1], &userMain, nullptr);
+    thread_create(&threads[1], &userMain, nullptr);
 
     //context switch tests
     //thread_create(&threads[1], &function1, nullptr);
@@ -58,7 +58,7 @@ void main() {
 
     //Periodic thread test
     thread_create(&threads[2],&_console::putc_thread_function, nullptr);
-    thread_create(&threads[1],&functionPeriodicThreadTest, nullptr);
+    //thread_create(&threads[1],&functionPeriodicThreadTest, nullptr);
 
     _thread::running = threads[0];
     //thread_exit();

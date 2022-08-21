@@ -28,3 +28,7 @@ _buffer::_buffer():left(0), right(0), taken(0) {}
 int _buffer::isEmpty() {
     return taken<=0;
 }
+
+int _buffer::isFull() {
+    return taken>=MAX_BUFFER_SIZE;
+}

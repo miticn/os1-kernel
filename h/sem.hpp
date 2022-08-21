@@ -18,6 +18,8 @@ public:
     static int sem_close(sem_t handle);
     void wait();
     int signal();
+
+    _sem();
 private:
     thread_t first;
     thread_t last;

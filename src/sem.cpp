@@ -67,6 +67,12 @@ void _sem::sem_open(sem_t *handle, unsigned int init) {
     (*handle)->last = 0;
 }
 
+_sem::_sem(){
+    this->value = 0;
+    this->first = 0;
+    this->last = 0;
+}
+
 int _sem::sem_close(sem_t handle) {
     thread_t i;
     while( (i = handle->get())!=0){
