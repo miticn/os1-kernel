@@ -26,8 +26,8 @@ void Thread::dispatch(){
 Thread::Thread(){
     thread_create_no_start(&this->myHandle,&Thread::wrapper,this);
 }
-int Thread::sleep(time_t){
-    return 0;//??????
+int Thread::sleep(time_t time){
+    return time_sleep(time);
 }
 
 Thread::~Thread(){
@@ -68,4 +68,12 @@ void PeriodicThread::wrapperPeriodic(void *struc) {
         if(t)((PeriodicThread*)t)->periodicActivation();
         else break;
     }
+}
+
+char Console::getc() {
+    return ::getc();
+}
+
+void Console::putc(char c) {
+    ::putc(c);
 }

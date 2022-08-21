@@ -41,11 +41,11 @@ protected:
     virtual void periodicActivation() {}
     static void wrapperPeriodic (void* t);
 };
-/*
+
 class Console {
 public:
     static char getc ();
     static void putc (char);
 };
- */
+
 #endif
