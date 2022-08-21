@@ -16,6 +16,7 @@ thread_t Sleep::get() {
 }
 
 void Sleep::push(thread_t thrd, time_t time) {
+    thrd->setMyState(_thread::ThreadState::Sleep);
     thread_t i = first;
     thread_t prev = 0;
     while(i!=0 and time >= i->getMyTime()){
@@ -54,4 +55,25 @@ time_t Sleep::getTimeLeft() {
 
 int Sleep::isEmpty() {
     return first == 0;
+}
+
+int Sleep::removeThread(thread_t handle){
+    //find thread, keep prev, remove from list
+    thread_t prev = 0;
+    int found = 0;
+    for(thread_t i = first; i!=0;i=i->mySchedulerNode.getNext()){
+        if(i==handle){
+            found=1;
+            break;
+        }
+        prev = i;
+    }
+    if(found){
+        if (handle!=first)
+            prev->mySchedulerNode.setNext(handle->mySchedulerNode.getNext());
+        else{
+            first = first->mySchedulerNode.getNext();
+        }
+    }
+    return !found;
 }

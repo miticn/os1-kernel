@@ -8,7 +8,7 @@ typedef _thread* thread_t;
 
 class _thread{
 public:
-    enum ThreadState { Scheduler, Semaphore, Sleep };
+    enum ThreadState { Scheduler, Semaphore, Sleep, Limbo };
 private:
     _thread(void (*body)(void *), void* arg, void* stack_space, int start=1);
     void (*body)(void *);

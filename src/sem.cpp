@@ -5,18 +5,24 @@
 #include "../h/mem.h"
 
 thread_t _sem::get(){
-    if(first == 0){//? no thread
-        return 0;
-    }
-    else{
-        thread_t tmp = first;
+    thread_t tmp = 0;
+    do{
+        if(first == 0){//? no thread
+            return 0;
+        }
+        if(tmp!=0 && tmp->getMyState()==_thread::ThreadState::Limbo){
+            _thread::delThread(tmp);
+        }
+
+        tmp = first;
         first = first->mySchedulerNode.getNext();
         tmp->mySchedulerNode.setNext(0);
-        return tmp;
-    }
+    }while(tmp->getMyState()==_thread::ThreadState::Limbo);
+    return tmp;
 }
 
 void _sem::push(thread_t thrd){
+    thrd->setMyState(_thread::ThreadState::Semaphore);
     thrd->mySchedulerNode.setNext(0);
     if(first==0){
         first = last = thrd;

@@ -17,5 +17,6 @@ public:
     static void push(thread_t, time_t);
     static time_t getTimeLeft();
     static int isEmpty();
+    static int removeThread(thread_t handle);
 };
 #endif //PROJECT_BASE_SLEEP_HPP

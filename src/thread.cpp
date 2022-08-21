@@ -5,6 +5,7 @@
 #include "../h/scheduler.hpp"
 #include "../h/syscall_cpp.hpp"
 #include "../h/mem.h"
+#include "../h/sleep.hpp"
 
 extern "C" void retriveRegistersFromThreadStackToSys(void *threadContext);
 extern "C" void saveRegistersFromSysToThreadStack(void *threadContext);
@@ -47,6 +48,7 @@ _thread::_thread(void (*body)(void *), void* arg, void* stack_space, int start):
 {
     if (stack!=0) ((uint64*)stack)[10]=(uint64)arg;
     if(body!=0){
+        this->myState = ThreadState::Limbo;
         if (start)
             Scheduler::push(this);
         this->started = start;
@@ -93,14 +95,28 @@ void _thread::thread_exit_class(thread_t handle) {
     if (handle==running)
         thread_exit();
     else{
-        //remove from scheduler and delete
-        if (handle->started){
-            int notFine = Scheduler::removeThread(handle);
-            if(!notFine)
+        //remove from scheduler or sleep or sem and delete
+        switch ((handle->myState)) {
+            case _thread::ThreadState::Limbo:{
                 delThread(handle);
-        }
-        else{
-            delThread(handle);
+            }
+                break;
+            case _thread::ThreadState::Semaphore:{
+                handle->setMyState(ThreadState::Limbo);
+            }
+                break;
+            case _thread::ThreadState::Sleep:{
+                int notFine = Sleep::removeThread(handle);
+                if(!notFine)
+                    delThread(handle);
+            }
+                break;
+            case _thread::ThreadState::Scheduler:{
+                int notFine = Scheduler::removeThread(handle);
+                if(!notFine)
+                    delThread(handle);
+            }
+                break;
         }
     }
 }

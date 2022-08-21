@@ -19,6 +19,7 @@ thread_t Scheduler::get(){
 }
 
 void Scheduler::push(thread_t thrd){
+    thrd->setMyState(_thread::ThreadState::Scheduler);
     thrd->mySchedulerNode.setNext(0);
     if(first==0){
         first = last = thrd;
@@ -58,7 +59,4 @@ int Scheduler::removeThread(thread_t handle){
         }
     }
     return !found;
-
-
-
 }
