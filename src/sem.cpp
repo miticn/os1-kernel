@@ -90,3 +90,7 @@ int _sem::sem_close(sem_t handle) {
     __mem_free(handle);
     return 0;
 }
+
+int _sem::isWaiting() {
+    return first!=0;
+}

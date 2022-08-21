@@ -20,6 +20,7 @@ public:
     int signal();
 
     _sem();
+    int isWaiting();
 private:
     thread_t first;
     thread_t last;

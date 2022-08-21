@@ -9,6 +9,7 @@
 #include "../h/scheduler.hpp"
 #include "../h/example.hpp"
 #include "../h/console.h"
+#include "../h/sleep.hpp"
 void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
@@ -63,11 +64,8 @@ void main() {
     _thread::running = threads[0];
     //thread_exit();
 
-    while (Scheduler::firstGet() != nullptr) {
+    while (Scheduler::firstGet() != nullptr || !Sleep::isEmpty() || _console::waitingInput()) {
         thread_dispatch();
     }
     delete threads[1];
-
-    //while(1){
-    //}
 }
