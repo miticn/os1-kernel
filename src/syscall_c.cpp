@@ -1,10 +1,9 @@
+#include "../lib/hw.h"
 #include "../h/syscall_c.h"
-#include "../h/mem.h"
-#include "../h/thread.hpp"
 #include "../h/abi_codes.h"
+#include "../h/mem.h"
 #include "../h/console.h"
 
-#include "../lib/hw.h"
 //always use ecall
 extern "C" void setParams(uint64 a0,uint64 a1,uint64 a2,uint64 a3,uint64 a4);
 
