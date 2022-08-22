@@ -133,6 +133,10 @@ extern "C" void handleSupervisorTrap(){
                 _console::putc(a1);
             }
                 break;
+            case FINISHED: {
+                _thread::setReturnValue(Scheduler::firstGet() == nullptr && Sleep::isEmpty() && !_console::waitingInput());//add to check if outbuffer empty
+            }
+            break;
         }
     }
     else if(scause==(0x01UL<< 63 | 0x01)){ //is timer interupt

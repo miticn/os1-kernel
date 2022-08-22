@@ -3,6 +3,8 @@
 .global _ZN7_thread13contextSwitchEPNS_7ContextES1_
 .global _ZN7_thread4exitEPNS_7ContextE
 .global setParams
+.global setToUserMode
+.global setToSysMode
 
 .extern _ZN7_thread22savedRegsSystemPointerE
 
@@ -77,6 +79,16 @@ _ZN7_thread13contextSwitchEPNS_7ContextES1_:# a0 old, a1 -new
     ret
 
 setParams:
+    ret
+
+setToUserMode:
+    addi t4, zero, 256
+    csrc sstatus, t4
+    ret
+
+setToSysMode:
+    addi t4, zero, 256
+    csrs sstatus, t4
     ret
 
 _ZN7_thread4exitEPNS_7ContextE:

@@ -25,6 +25,7 @@ extern "C" {
 
     void putc(char c);
     char getc();
+    int finished();
 #ifdef __cplusplus
 }
 #endif

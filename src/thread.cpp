@@ -9,7 +9,8 @@
 
 extern "C" void retriveRegistersFromThreadStackToSys(void *threadContext);
 extern "C" void saveRegistersFromSysToThreadStack(void *threadContext);
-
+extern "C" void setToUserMode();
+extern "C" void setToSysMode();
 
 uint64 _thread::savedRegsSystem[34] = {6};
 void * _thread::savedRegsSystemPointer = savedRegsSystem;
@@ -34,10 +35,10 @@ void _thread::dispatch(){
     Scheduler::push(old);
     running = Scheduler::get();
 
-    //_thread::contextSwitch(&old->myContext, &running->myContext);//switch ra and sp
-
-    uint64 mask = 256;
-    __asm__ volatile("csrc sstatus, %[mask]" : : [mask] "r"(mask));
+    if(running->getPrivilegeLevel()==_thread::ThreadPrivilege::User)
+        setToUserMode();
+    else if (running->getPrivilegeLevel()==_thread::ThreadPrivilege::System)
+        setToSysMode();
     retriveRegistersFromThreadStackToSys(&running->myContext);
 }
 
@@ -48,6 +49,7 @@ _thread::_thread(void (*body)(void *), void* arg, void* stack_space, int start):
 {
     if (stack!=0) ((uint64*)stack)[10]=(uint64)arg;
     if(body!=0){
+        this->myPrivilage = ThreadPrivilege::User;
         this->myState = ThreadState::Limbo;
         if (start)
             Scheduler::push(this);
@@ -135,4 +137,12 @@ _thread::ThreadState _thread::getMyState() {
 
 void _thread::setMyState(_thread::ThreadState newState) {
     myState = newState;
+}
+
+_thread::ThreadPrivilege _thread::getPrivilegeLevel() {
+    return this->myPrivilage;
+}
+
+void _thread::setToSystem() {
+    myPrivilage = _thread::ThreadPrivilege::System;
 }

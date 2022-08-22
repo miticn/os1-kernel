@@ -9,5 +9,5 @@
 - [x] 9. Asinhroni prekid od tajmera, raspodela vremena (promena konteksta na istek vremenskog odsečka, engl. time sharing).
 - [x] 10. Uspavljivanje i buđenje niti, sistemski poziv time_sleep (C API i ABI).
 - [x] 11. Konzola, izlazni smer (slanje podataka na ekran): bafer, interna nit jezgra, sistemski poziv putc (C API i ABI).
-- [ ] 12. Konzola, ulazni smer (prijem podataka sa tastature): bafer, prekidna rutina, sistemski poziv getc (C API i ABI).
-- [ ] 13. C++ API u celini.
+- [x] 12. Konzola, ulazni smer (prijem podataka sa tastature): bafer, prekidna rutina, sistemski poziv getc (C API i ABI).
+- [x] 13. C++ API u celini.

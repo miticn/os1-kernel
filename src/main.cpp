@@ -13,10 +13,7 @@
 void enableInterupt(){
     __asm__ volatile("csrw stvec, %[vector]" : : [vector] "r" (&supervisorTrap));
     __asm__ volatile("csrs sstatus, 0x02");//enable interupt
-    //uint64 mask = 256;
-    //__asm__ volatile("csrc sstatus, %[mask]" : : [mask] "r"(mask));
 }
-
 extern void userMain(void* arg);
 
 void main() {
@@ -58,14 +55,16 @@ void main() {
     */
 
     //Periodic thread test
-    thread_create(&threads[2],&_console::putc_thread_function, nullptr);
+    thread_create_no_start(&threads[2],&_console::putc_thread_function, nullptr);
+    threads[2]->setToSystem();
+    threads[2]->start();
     //thread_create(&threads[1],&functionPeriodicThreadTest, nullptr);
 
     _thread::running = threads[0];
     //thread_exit();
 
-    while (Scheduler::firstGet() != nullptr || !Sleep::isEmpty() || _console::waitingInput()) {
+    while (!finished()) {
         thread_dispatch();
     }
-    delete threads[1];
+    delete threads[2];
 }

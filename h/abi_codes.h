@@ -13,3 +13,4 @@
 #define TIME_SLEEP_CODE 0x31
 #define GETC_CODE 0x41
 #define PUTC_CODE 0x42
+#define FINISHED 0xFF

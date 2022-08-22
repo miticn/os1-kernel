@@ -9,6 +9,7 @@ typedef _thread* thread_t;
 class _thread{
 public:
     enum ThreadState { Scheduler, Semaphore, Sleep, Limbo };
+    enum ThreadPrivilege { User, System };
 private:
     _thread(void (*body)(void *), void* arg, void* stack_space, int start=1);
     void (*body)(void *);
@@ -17,9 +18,14 @@ private:
     int started;
     time_t myTime;
     ThreadState myState;
+    ThreadPrivilege myPrivilage;
+
 public:
     ThreadState getMyState();
     void setMyState(ThreadState newState);
+
+    ThreadPrivilege getPrivilegeLevel();
+    void setToSystem();
 
     time_t getMyTime();
     void setMyTime(time_t time);
