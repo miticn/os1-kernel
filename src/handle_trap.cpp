@@ -134,7 +134,7 @@ extern "C" void handleSupervisorTrap(){
             }
                 break;
             case FINISHED: {
-                _thread::setReturnValue(Scheduler::firstGet() == nullptr && Sleep::isEmpty() && !_console::waitingInput());//add to check if outbuffer empty
+                _thread::setReturnValue(Scheduler::firstGet() == nullptr && Sleep::isEmpty() && !_console::waitingInput() && !_console::waitingOutput());//add to check if outbuffer empty
             }
             break;
         }

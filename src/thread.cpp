@@ -48,12 +48,12 @@ _thread::_thread(void (*body)(void *), void* arg, void* stack_space, int start):
         myContext({(uint64)body,(uint64)stack_space})
 {
     if (stack!=0) ((uint64*)stack)[10]=(uint64)arg;
+    this->started = start;
+    this->myPrivilage = ThreadPrivilege::User;
+    this->myState = ThreadState::Limbo;
     if(body!=0){
-        this->myPrivilage = ThreadPrivilege::User;
-        this->myState = ThreadState::Limbo;
         if (start)
             Scheduler::push(this);
-        this->started = start;
         ((uint64*)stack)[1] = (uint64)&::thread_exit;
     }
 };

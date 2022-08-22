@@ -5,19 +5,13 @@
 #include "../h/mem.h"
 
 thread_t _sem::get(){
-    thread_t tmp = 0;
-    do{
-        if(first == 0){//? no thread
-            return 0;
-        }
-        if(tmp!=0 && tmp->getMyState()==_thread::ThreadState::Limbo){
-            _thread::delThread(tmp);
-        }
-
-        tmp = first;
-        first = first->mySchedulerNode.getNext();
-        tmp->mySchedulerNode.setNext(0);
-    }while(tmp->getMyState()==_thread::ThreadState::Limbo);
+    this->clean();
+    if(first == 0){//? no thread
+        return 0;
+    }
+    thread_t tmp = first;
+    first = first->mySchedulerNode.getNext();
+    tmp->mySchedulerNode.setNext(0);
     return tmp;
 }
 
@@ -92,5 +86,15 @@ int _sem::sem_close(sem_t handle) {
 }
 
 int _sem::isWaiting() {
+    this->clean();
     return first!=0;
+}
+
+void _sem::clean() {
+    while(first!=0 && first->getMyState()==_thread::ThreadState::Limbo){
+        thread_t tmp = first;
+        first = first->mySchedulerNode.getNext();
+        tmp->mySchedulerNode.setNext(0);
+        _thread::delThread(tmp);
+    }
 }

@@ -20,14 +20,10 @@ void _console::putc(char c) {
 
 void _console::putc_thread_function(void *) {//runs as system thread
     while(1){
-        //disable interupt here
-        __asm__ volatile("csrc sstatus, 0x02");//disable interupt
         while(((*(uint8*)CONSOLE_STATUS) & 0x20) && !bufferOUT.isEmpty()){
             char c = bufferOUT.pop();
             *(char*)(CONSOLE_TX_DATA) = c;
         }
-        //enable interupt here
-        __asm__ volatile("csrs sstatus, 0x02");
         if(bufferOUT.isEmpty())
             sem_wait(&_console::semBufferOUT);
     }
@@ -46,4 +42,8 @@ void _console::getc_function() { // runs inside interupt
 
 int _console::waitingInput() {
     return _console::semBufferIn.isWaiting();
+}
+
+int _console::waitingOutput() {
+    return !_console::bufferOUT.isEmpty();
 }

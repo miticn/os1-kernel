@@ -14,6 +14,7 @@ public:
     static char getc ();
     static void putc (char);
     static int waitingInput();
+    static int waitingOutput();
 
     static void putc_thread_function(void *);
     static void getc_function();

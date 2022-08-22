@@ -30,6 +30,7 @@ private:
     thread_t get();
     void push(thread_t);
     thread_t firstGet(){return first;}
+    void clean();
 };
 
 #endif //PROJECT_BASE_SEM_HPP

@@ -63,7 +63,7 @@ void main() {
     _thread::running = threads[0];
     //thread_exit();
 
-    while (!finished()) {
+    while (!finished_kernel()) {
         thread_dispatch();
     }
     delete threads[2];

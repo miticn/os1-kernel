@@ -164,7 +164,7 @@ int time_sleep(time_t time) {
     return ret_val;
 }
 
-int finished(){
+int finished_kernel(){
     setParams(FINISHED,0,0,0,0);
     __asm__ volatile("ecall");
     int ret_val;
