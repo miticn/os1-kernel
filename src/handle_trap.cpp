@@ -104,13 +104,13 @@ extern "C" void handleSupervisorTrap(){
                 break;
             case SEM_CLOSE_CODE:{
                 sem_t handle = (sem_t) a1;
-                _sem::sem_close(handle);
+                int ret = _sem::sem_close(handle);
+                _thread::setReturnValue((uint64)ret);
             }
                 break;
             case SEM_WAIT_CODE: {
                 sem_t handle = (sem_t) a1;
                 handle->wait();
-                //_thread::setReturnValue((uint64)0);
             }
                 break;
             case SEM_SIGNAL_CODE:{
@@ -152,6 +152,7 @@ extern "C" void handleSupervisorTrap(){
         while(!(Sleep::isEmpty()) && timerSleepCount>= Sleep::getTimeLeft()){
             timerSleepCount-=Sleep::getTimeLeft();
             thread_t tmp = Sleep::get();
+            tmp->setReturnValue(0);
             Scheduler::push(tmp);
         }
 
